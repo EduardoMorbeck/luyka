@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS produtos (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(150) NOT NULL,
+  descricao TEXT,
+  preco NUMERIC(10,2) NOT NULL,
+  estoque INT NOT NULL DEFAULT 0,
+  categoria VARCHAR(100),
+  criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  atualizado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

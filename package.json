@@ -1,0 +1,32 @@
+{
+  "name": "lukya",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:css": "npx @tailwindcss/cli -i ./src/styles.css -o ./dist/styles.css --watch"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.55.0",
+    "@tailwindcss/vite": "^4.1.11",
+    "@vue/compiler-sfc": "^3.5.18",
+    "axios": "^1.11.0",
+    "vue": "^3.5.18",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "autoprefixer": "^10.4.21",
+    "tailwindcss": "^4.1.11",
+    "vite": "^7.0.6"
+  },
+  "description": "This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.",
+  "main": "vite.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
