@@ -365,7 +365,6 @@ function submitForm() {
     "cidade",
     "estado",
     "cpfCnpj",
-    "obs",
   ];
 
   const cepLimpo = limparCep(form.cep);

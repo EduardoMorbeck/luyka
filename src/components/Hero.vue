@@ -63,14 +63,14 @@ const slides = [
       "O brilho ideal para todos os momentos. Feita com prata 925 legítima.",
     button: "Ver detalhes",
     href: "",
-    img: "/src/assets/5.png",
+    img: "/5.png",
   },
   {
     title: "Anel com Zircônia",
     subtitle: "Delicadeza e sofisticação em uma peça atemporal.",
     button: "Ver mais",
     href: "",
-    img: "/src/assets/6.png",
+    img: "/6.png",
   },
   {
     title: "Acessórios de Prata",
@@ -78,7 +78,7 @@ const slides = [
       "O brilho ideal para todos os momentos. Feita com prata 925 legítima.",
     button: "Ver mais",
     href: "",
-    img: "/src/assets/2.png",
+    img: "/2.png",
   },
 ];
 

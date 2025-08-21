@@ -37,22 +37,22 @@ const categories = [
   {
     title: "Aneis",
     href: "",
-    img: "/src/assets/vue.svg",
+    img: "/vue.svg",
   },
   {
     title: "Brincos",
     href: "",
-    img: "/src/assets/vue.svg",
+    img: "/vue.svg",
   },
   {
     title: "Colares",
     href: "",
-    img: "/src/assets/vue.svg",
+    img: "/vue.svg",
   },
   {
     title: "Pulseiras",
     href: "",
-    img: "/src/assets/vue.svg",
+    img: "/vue.svg",
   },
 ];
 </script>
