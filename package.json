@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev:front": "vite",
-    "dev:api": "uvicorn backend.app.main:app --reload",
-    "dev": "concurrently -k \"npm:dev:front\" \"npm:dev:api\"",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "uvicorn backend.app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+    "build:css": "npx @tailwindcss/cli -i ./src/styles.css -o ./dist/styles.css --watch",
+    "backend": "uvicorn backend.app.main:app --reload",
+    "fullstack": "concurrently \"npm run dev\" \"npm run backend\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",

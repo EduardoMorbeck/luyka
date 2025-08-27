@@ -77,8 +77,6 @@ def delete_produto(produto_id: int, db: Session = Depends(get_db)):
     db.commit()
     return
 
-# --------- IMAGENS ---------
-
 @router.post("/{produto_id}/imagem", response_model=schemas.ProdutoOut)
 async def upload_imagem_produto(
     produto_id: int,
