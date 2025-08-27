@@ -1,138 +1,213 @@
 <template>
-  <div class="w-full flex flex-col py-28 gap-8 max-w-3xl mx-auto">
-    <h1 class="font-bold text-center text-3xl mb-2">CADASTRAR PRODUTOS</h1>
+  <div class="w-full flex flex-col py-28 gap-10 max-w-4xl mx-auto">
+    <h1 class="font-bold text-center text-4xl mb-4 tracking-wide">
+      Cadastrar Produtos
+    </h1>
 
     <!-- Form criar -->
     <form
-      class="grid grid-cols-1 md:grid-cols-5 gap-2 items-end"
+      class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white shadow rounded-lg p-6"
       @submit.prevent="onCreate"
     >
+      <div class="md:col-span-5">
+        <label class="block text-sm font-medium mb-1">Imagem</label>
+        <input
+          type="file"
+          accept="image/*"
+          class="w-full border rounded p-3 cursor-pointer hover:bg-gray-100 transition"
+          @change="onCreateImageChange"
+        />
+        <div v-if="createImagePreview" class="mt-3">
+          <img
+            :src="createImagePreview"
+            class="h-96 w-96 object-cover rounded-lg border shadow"
+            alt="Preview da imagem"
+          />
+        </div>
+      </div>
+
       <div class="md:col-span-2">
-        <label class="block text-sm mb-1">Nome</label>
+        <label class="block text-sm font-medium mb-1">Nome</label>
         <input
           v-model="createForm.nome"
-          class="w-full border rounded p-2"
+          class="w-full border rounded p-3"
           required
         />
       </div>
       <div>
-        <label class="block text-sm mb-1">Preço</label>
+        <label class="block text-sm font-medium mb-1">Preço</label>
         <input
           v-model.number="createForm.preco"
           type="number"
           step="0.01"
           min="0"
-          class="w-full border rounded p-2"
+          class="w-full border rounded p-3"
           required
         />
       </div>
       <div>
-        <label class="block text-sm mb-1">Estoque</label>
+        <label class="block text-sm font-medium mb-1">Estoque</label>
         <input
           v-model.number="createForm.estoque"
           type="number"
           min="0"
-          class="w-full border rounded p-2"
+          class="w-full border rounded p-3"
           required
         />
       </div>
       <div>
-        <label class="block text-sm mb-1">Categoria</label>
+        <label class="block text-sm font-medium mb-1">Categoria</label>
         <input
           v-model="createForm.categoria"
-          class="w-full border rounded p-2"
+          class="w-full border rounded p-3"
         />
       </div>
       <div class="md:col-span-5">
-        <label class="block text-sm mb-1">Descrição</label>
+        <label class="block text-sm font-medium mb-1">Descrição</label>
         <textarea
           v-model="createForm.descricao"
-          rows="2"
-          class="w-full border rounded p-2"
+          rows="3"
+          class="w-full border rounded p-3"
         ></textarea>
       </div>
       <div class="md:col-span-5 flex justify-end">
         <button
           :disabled="loading"
-          class="px-4 py-2 rounded bg-black text-white"
+          class="cursor-pointer px-6 py-3 rounded bg-black text-white font-medium hover:bg-gray-800 transition"
         >
           {{ loading ? "Salvando..." : "Adicionar" }}
         </button>
       </div>
     </form>
 
-    <hr class="my-4" />
-
     <!-- Lista -->
-    <ul v-if="produtos.length > 0" class="divide-y">
-      <li v-for="p in produtos" :key="p.id" class="py-4">
-        <!-- Modo edição -->
+    <ul v-if="produtos.length > 0" class="grid gap-6">
+      <li
+        v-for="p in produtos"
+        :key="p.id"
+        class="bg-white rounded-lg shadow p-6 flex justify-between items-start gap-6"
+      >
+        <!-- Modo edição (igual ao layout de criação) -->
         <div
           v-if="editId === p.id"
-          class="grid grid-cols-1 md:grid-cols-6 gap-2"
+          class="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white shadow rounded-lg p-6 items-end"
         >
-          <input
-            v-model="editForm.nome"
-            class="border rounded p-2 md:col-span-2"
-          />
-          <input
-            v-model.number="editForm.preco"
-            type="number"
-            step="0.01"
-            min="0"
-            class="border rounded p-2"
-          />
-          <input
-            v-model.number="editForm.estoque"
-            type="number"
-            min="0"
-            class="border rounded p-2"
-          />
-          <input v-model="editForm.categoria" class="border rounded p-2" />
-          <div class="md:col-span-6">
+          <div class="md:col-span-5">
+            <label class="block text-sm font-medium mb-1">Imagem</label>
+            <input
+              type="file"
+              accept="image/*"
+              class="w-full border rounded p-3 cursor-pointer hover:bg-gray-100 transition"
+              @change="onEditImageChange"
+            />
+            <div v-if="editImagePreview || p.imagem_url" class="mt-3">
+              <img
+                :src="editImagePreview || thumb(p.imagem_url)"
+                class="h-96 w-96 object-cover rounded-lg border shadow"
+                alt="Preview da imagem"
+              />
+            </div>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-1">Nome</label>
+            <input
+              v-model="editForm.nome"
+              class="w-full border rounded p-3"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Preço</label>
+            <input
+              v-model.number="editForm.preco"
+              type="number"
+              step="0.01"
+              min="0"
+              class="w-full border rounded p-3"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Estoque</label>
+            <input
+              v-model.number="editForm.estoque"
+              type="number"
+              min="0"
+              class="w-full border rounded p-3"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Categoria</label>
+            <input
+              v-model="editForm.categoria"
+              class="w-full border rounded p-3"
+            />
+          </div>
+
+          <div class="md:col-span-5">
+            <label class="block text-sm font-medium mb-1">Descrição</label>
             <textarea
               v-model="editForm.descricao"
-              rows="2"
-              class="w-full border rounded p-2"
+              rows="3"
+              class="w-full border rounded p-3"
             ></textarea>
           </div>
-          <div class="flex gap-2 md:col-span-6 justify-end">
+
+          <div class="md:col-span-5 flex justify-end gap-3">
             <button
               @click="onSave(p.id)"
               :disabled="loading"
-              class="px-3 py-2 rounded bg-emerald-600 text-white"
+              class="cursor-pointer px-6 py-3 rounded bg-black text-white font-medium hover:bg-gray-800 transition"
             >
               {{ loading ? "Salvando..." : "Salvar" }}
             </button>
-            <button @click="onCancel()" class="px-3 py-2 rounded border">
+            <button
+              @click="onCancel()"
+              class="cursor-pointer px-6 py-3 rounded border hover:bg-gray-100 transition"
+            >
               Cancelar
             </button>
           </div>
         </div>
 
         <!-- Modo leitura -->
-        <div v-else class="flex items-start justify-between gap-4">
-          <div>
-            <div class="font-semibold">{{ p.nome }}</div>
+        <div v-else class="flex flex-1 items-start gap-6">
+          <img
+            v-if="p.imagem_url"
+            :src="thumb(p.imagem_url)"
+            class="h-96 w-96 rounded-lg object-cover border shadow"
+            alt="Imagem do produto"
+          />
+          <div class="flex flex-col gap-2">
+            <div class="font-semibold text-lg">{{ p.nome }}</div>
             <div class="text-sm text-gray-600">
               R$ {{ Number(p.preco).toFixed(2) }} • {{ p.estoque }} unid. •
               {{ p.categoria || "sem categoria" }}
             </div>
-            <div class="text-sm mt-1 text-gray-700" v-if="p.descricao">
+            <div class="text-sm text-gray-700" v-if="p.descricao">
               {{ p.descricao }}
             </div>
           </div>
-          <div class="shrink-0 flex gap-2">
-            <button @click="onEdit(p)" class="px-3 py-2 rounded border">
-              Editar
-            </button>
-            <button
-              @click="onDelete(p.id)"
-              class="px-3 py-2 rounded bg-red-600 text-white"
-            >
-              Excluir
-            </button>
-          </div>
+        </div>
+
+        <div v-if="editId !== p.id" class="shrink-0 flex flex-col gap-2">
+          <button
+            @click="onEdit(p)"
+            class="cursor-pointer px-4 py-2 rounded border hover:bg-gray-100 transition"
+          >
+            Editar
+          </button>
+          <button
+            @click="onDelete(p.id)"
+            class="cursor-pointer px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition"
+          >
+            Excluir
+          </button>
         </div>
       </li>
     </ul>
@@ -148,6 +223,7 @@ import {
   createProduto,
   updateProduto,
   deleteProdutoById,
+  uploadImagemProduto,
 } from "/src/api.js";
 
 const produtos = ref([]);
@@ -161,6 +237,8 @@ const createForm = ref({
   categoria: "",
   descricao: "",
 });
+const createImageFile = ref(null);
+const createImagePreview = ref(null);
 
 // edição
 const editId = ref(null);
@@ -171,6 +249,42 @@ const editForm = ref({
   categoria: "",
   descricao: "",
 });
+const editImageFile = ref(null);
+const editImagePreview = ref(null);
+
+// previews
+function readPreview(file, targetRef) {
+  if (!file) {
+    targetRef.value = null;
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    targetRef.value = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// cria: change handler
+function onCreateImageChange(e) {
+  const file = e.target.files?.[0] || null;
+  createImageFile.value = file;
+  readPreview(file, createImagePreview);
+}
+
+// edita: change handler
+function onEditImageChange(e) {
+  const file = e.target.files?.[0] || null;
+  editImageFile.value = file;
+  readPreview(file, editImagePreview);
+}
+
+// thumbnail helper (Supabase Image Transformations)
+function thumb(url) {
+  if (!url) return "";
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}width=160&height=160&resize=cover&quality=80`;
+}
 
 function fetchProdutos() {
   return getProdutos()
@@ -185,8 +299,11 @@ function fetchProdutos() {
 function onCreate() {
   loading.value = true;
   createProduto({ ...createForm.value })
-    .then(() => {
-      // limpa form e recarrega
+    .then((response) => {
+      if (createImageFile.value) {
+        uploadImagemProduto(response.id, createImageFile.value);
+      }
+
       createForm.value = {
         nome: "",
         preco: 0,
@@ -194,6 +311,10 @@ function onCreate() {
         categoria: "",
         descricao: "",
       };
+
+      createImageFile.value = null;
+      createImagePreview.value = null;
+
       return fetchProdutos();
     })
     .catch((err) => console.error("Erro ao criar produto:", err))
@@ -211,6 +332,8 @@ function onEdit(p) {
     categoria: p.categoria || "",
     descricao: p.descricao || "",
   };
+  editImageFile.value = null;
+  editImagePreview.value = null;
 }
 
 function onCancel() {
@@ -220,7 +343,10 @@ function onCancel() {
 function onSave(id) {
   loading.value = true;
   updateProduto(id, { ...editForm.value })
-    .then(() => {
+    .then((response) => {
+      if (editImageFile.value) {
+        uploadImagemProduto(id, editImageFile.value);
+      }
       editId.value = null;
       return fetchProdutos();
     })

@@ -19,8 +19,12 @@
       </a>
     </div>
     <div class="w-1/4 flex items-center justify-end gap-4">
-      <SearchBar />
-      <Cart />
+      <div class="w-8/12">
+        <SearchBar />
+      </div>
+      <div>
+        <Cart />
+      </div>
     </div>
   </div>
 </template>

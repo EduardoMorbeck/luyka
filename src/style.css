@@ -4,20 +4,13 @@
   box-sizing: border-box;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-.bg {
-  /* cores
+/* cores
   #735e59 dark
   #b9a994 medium
   #ede5dd light
-  
-
 */
+
+.bg {
   background: #ede5dd;
 }
 .bg-dark {

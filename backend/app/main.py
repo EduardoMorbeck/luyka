@@ -1,24 +1,22 @@
+# backend/app/main.py
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from .routers import products
+from fastapi.staticfiles import StaticFiles
+from backend.app.routers import products  # ajuste conforme seus routers
 
-app = FastAPI(title="API Luyka", version="1.0.0")
-
-# CORS — ajuste se necessário
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app = FastAPI()
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
-app.include_router(products.router)
+# sua API…
+@app.get("/api/ping")
+def ping():
+    return {"ok": True}
+
+# servir o front
+app.mount("/", StaticFiles(directory="dist", html=True), name="static")
+
+# Rotas da API sob /api
+app.include_router(products.router, prefix="/api")
+

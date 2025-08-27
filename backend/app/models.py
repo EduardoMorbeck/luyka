@@ -11,5 +11,6 @@ class Produto(Base):
     preco = Column(Numeric(10, 2), nullable=False)
     estoque = Column(Integer, nullable=False, default=0)
     categoria = Column(String(100))
+    imagem_path = Column(String)
     criado_em = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
     atualizado_em = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)

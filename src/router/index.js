@@ -18,10 +18,14 @@ const routes = [
     path: "/cuidados",
     component: Cuidados,
   },
+
+  { path: "/produtos", name: "produtos", component: Produtos },
   {
-    path: "/produtos",
+    path: "/produtos/:consulta?",
+    name: "produtosConsulta",
     component: Produtos,
   },
+
   {
     path: "/entrega",
     component: Entrega,
@@ -39,6 +43,11 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    if (to.hash) return { el: to.hash, top: 0 };
+    return { left: 0, top: 0, behavior: "auto" };
+  },
 });
 
 export default router;

@@ -58,7 +58,7 @@
           <div class="w-1/2 flex justify-end">SUBTOTAL</div>
         </div>
 
-        <div class="overflow-y-auto grow pt-8">
+        <div class="overflow-y-auto grow py-4">
           <template v-if="cartStore.items.length > 0">
             <div
               v-for="item in cartStore.items"
@@ -77,7 +77,17 @@
                   <h3 class="font-medium leading-snug">{{ item.title }}</h3>
                 </div>
 
-                <div class="mt-2 flex gap-3">
+                <div class="mt-1 text-xs">
+                  <span v-if="Number(item.stok) > 0" class="text-gray-500">
+                    Estoque: {{ item.stok }} • Restam
+                    {{ Math.max(Number(item.stok) - Number(item.qty), 0) }}
+                  </span>
+                  <span v-else class="text-red-600 font-medium">
+                    Esgotado
+                  </span>
+                </div>
+
+                <div class="mt-2">
                   <div
                     class="inline-flex items-center border border-dark rounded-full"
                   >
@@ -93,13 +103,27 @@
                       item.qty
                     }}</span>
                     <button
-                      class="flex items-center justify-center cursor-pointer py-2.5 px-3 rounded-full hover:bg-gray-200"
+                      :disabled="
+                        Number(item.stok) === 0 ||
+                        Number(item.qty) >= Number(item.stok)
+                      "
+                      class="flex items-center justify-center cursor-pointer py-2.5 px-3 rounded-full hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       @click.stop="cartStore.increment(item.key)"
                       aria-label="Aumentar quantidade"
-                      title="Aumentar"
+                      :title="
+                        Number(item.qty) >= Number(item.stok)
+                          ? `Estoque máximo: ${item.stok}`
+                          : 'Aumentar'
+                      "
                     >
                       <i class="fa-solid fa-plus"></i>
                     </button>
+                  </div>
+                  <div
+                    v-if="Number(item.qty) >= Number(item.stok)"
+                    class="mt-1 text-xs text-red-600"
+                  >
+                    Você atingiu o limite de estoque para este produto.
                   </div>
                 </div>
               </div>
@@ -124,18 +148,19 @@
                 </button>
               </div>
             </div>
-
-            <div class="flex justify-between text-xl pt-4 font-bold">
-              <span>Total</span>
-              <span
-                >R$ {{ cartStore.subtotal.toFixed(2).replace(".", ",") }}</span
-              >
-            </div>
           </template>
 
           <p v-else class="text-sm text-gray-500">
             O carrinho de compras está vazio.
           </p>
+        </div>
+
+        <div
+          class="flex justify-between text-xl py-4 font-bold"
+          v-if="cartStore.items.length > 0"
+        >
+          <span>Total</span>
+          <span>R$ {{ cartStore.subtotal.toFixed(2).replace(".", ",") }}</span>
         </div>
 
         <div v-if="cartStore.items.length > 0" class="flex justify-center">

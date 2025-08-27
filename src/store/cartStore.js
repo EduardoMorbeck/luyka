@@ -12,8 +12,11 @@ function loadItemsFromStorage() {
       key: i.key ?? i.id ?? i.title,
       id: i.id ?? null,
       title: i.title ?? "",
+      description: i.description ?? "",
+      category: i.category ?? "",
       img: i.img ?? "",
       price: Number(i.price) || 0,
+      stok: Number(i.stok) || 0, // estoque disponível
       qty: Number(i.qty) || 1,
     }));
   } catch {
@@ -27,9 +30,12 @@ function saveItemsToStorage(items) {
   } catch {}
 }
 
+let errorTimer = null;
+
 export const cartStore = reactive({
   open: false,
   items: loadItemsFromStorage(),
+  error: null, // mensagem de erro visível na UI
 
   openCart() {
     this.open = true;
@@ -38,10 +44,22 @@ export const cartStore = reactive({
     this.open = false;
   },
 
+  setError(message, ms = 3500) {
+    this.error = message;
+    if (errorTimer) clearTimeout(errorTimer);
+    errorTimer = setTimeout(() => {
+      this.error = null;
+    }, ms);
+  },
+
   _keyOf(p) {
     return p.id ?? p.title;
   },
 
+  /**
+   * Adiciona item respeitando o estoque (stok).
+   * Retorna { ok: boolean, message?: string }
+   */
   addItem(product) {
     const priceNumber =
       typeof product.price === "string"
@@ -49,25 +67,78 @@ export const cartStore = reactive({
         : Number(product.price) || 0;
 
     const key = this._keyOf(product);
+    const incomingQty = Number(product.qty ?? 1);
+
+    // estoque informado no payload ou existente no carrinho
+    const stokIncoming = Number(product.stok ?? 0);
+
     const existing = this.items.find((i) => i.key === key);
+    const currentQty = existing ? Number(existing.qty) : 0;
+    const currentStok = existing ? Number(existing.stok) : stokIncoming;
+
+    // Se não temos informação de estoque, consideramos 0 (bloqueia compra)
+    const effectiveStok = Number.isFinite(currentStok) ? currentStok : 0;
+
+    // Quantidade após adicionar
+    const finalQty = currentQty + incomingQty;
+
+    if (effectiveStok <= 0) {
+      const msg = "Produto esgotado no momento.";
+      this.setError(msg);
+      return { ok: false, message: msg };
+    }
+
+    if (finalQty > effectiveStok) {
+      const disponivel = Math.max(effectiveStok - currentQty, 0);
+      const msg =
+        disponivel > 0
+          ? `Quantidade indisponível. Restam apenas ${disponivel} unidade(s).`
+          : "Você já atingiu o limite do estoque para este produto.";
+      this.setError(msg);
+      return { ok: false, message: msg };
+    }
 
     if (existing) {
-      existing.qty += product.qty ?? 1;
+      existing.qty = finalQty;
+      // garante que estoque e preço estejam sincronizados
+      if (stokIncoming) existing.stok = Number(stokIncoming);
+      if (priceNumber) existing.price = priceNumber;
     } else {
       this.items.push({
         key,
         id: product.id ?? null,
-        title: product.title,
-        img: product.img,
+        title: product.title ?? "",
+        description: product.description ?? "",
+        category: product.category ?? "",
+        img: product.img ?? "",
         price: priceNumber,
-        qty: product.qty ?? 1,
+        stok: effectiveStok, // salva estoque no item
+        qty: incomingQty,
       });
     }
+
+    return { ok: true };
   },
 
   increment(key) {
     const it = this.items.find((i) => i.key === key);
-    if (it) it.qty++;
+    if (!it) return;
+
+    const stok = Number(it.stok ?? 0);
+    const next = Number(it.qty) + 1;
+
+    if (stok <= 0) {
+      this.setError("Produto esgotado no momento.");
+      return;
+    }
+    if (next > stok) {
+      this.setError(
+        `Quantidade indisponível. Estoque máximo: ${stok} unidade(s).`
+      );
+      return;
+    }
+
+    it.qty = next;
   },
 
   decrement(key) {
@@ -108,8 +179,11 @@ watch(
       key: i.key,
       id: i.id,
       title: i.title,
+      description: i.description,
+      category: i.category,
       img: i.img,
       price: i.price,
+      stok: i.stok,
       qty: i.qty,
     })),
   (items) => saveItemsToStorage(items),

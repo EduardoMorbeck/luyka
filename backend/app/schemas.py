@@ -5,7 +5,7 @@ from datetime import datetime
 class ProdutoBase(BaseModel):
     nome: str = Field(..., max_length=150)
     descricao: Optional[str] = None
-    preco: condecimal(max_digits=10, decimal_places=2)
+    preco: condecimal(max_digits=10, decimal_places=2) # type: ignore
     estoque: int = 0
     categoria: Optional[str] = None
 
@@ -15,7 +15,7 @@ class ProdutoCreate(ProdutoBase):
 class ProdutoUpdate(BaseModel):
     nome: Optional[str] = Field(None, max_length=150)
     descricao: Optional[str] = None
-    preco: Optional[condecimal(max_digits=10, decimal_places=2)] = None
+    preco: Optional[condecimal(max_digits=10, decimal_places=2)] = None # type: ignore
     estoque: Optional[int] = None
     categoria: Optional[str] = None
 
@@ -23,6 +23,8 @@ class ProdutoOut(ProdutoBase):
     id: int
     criado_em: datetime
     atualizado_em: datetime
+    imagem_url: Optional[str] = None   # URL pronta pra exibição (pública ou assinada)
+    imagem_path: Optional[str] = None  # path bruto no storage (útil para gestão)
 
     class Config:
         from_attributes = True

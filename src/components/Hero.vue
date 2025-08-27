@@ -1,98 +1,23 @@
 <template>
-  <div class="w-full h-screen flex items-center justify-center">
-    <div class="w-full relative flex items-center overflow-hidden h-[100vh]">
-      <!-- Slides -->
-      <div
-        class="w-full h-full flex flex-col transition-all duration-500"
-        :style="{ transform: `translateY(-${active * 100}%)` }"
-      >
-        <div
-          v-for="(slide, idx) in slides"
-          :key="idx"
-          class="min-h-full w-full flex items-center justify-between px-14 ml-8"
-        >
-          <!-- Esquerda: Texto -->
-          <div class="flex flex-col w-1/2">
-            <h2 class="text-6xl text-dark leading-tight">
-              {{ slide.title }}
-            </h2>
-            <p class="text-base text-gray mb-8">
-              {{ slide.subtitle }}
-            </p>
-            <a
-              :href="slide.href"
-              class="w-fit px-8 py-2.5 bg-btn text-dark font-medium rounded-full border-2 border-dark mt-2 cursor-pointer"
-            >
-              {{ slide.button }}
-            </a>
-          </div>
-          <!-- Direita: Imagem do produto -->
-          <div class="flex-1 flex justify-center items-center w-1/2">
-            <img
-              :src="slide.img"
-              alt="Produto"
-              class="object-contain w-[32rem]"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- Bullets -->
-      <div class="absolute right-8 top-2/4 flex flex-col gap-12">
-        <span
-          v-for="(_, idx) in slides"
-          :key="'bullet-' + idx"
-          :class="[
-            'block w-2.5 h-2.5 rounded-full bg-slate-950 transition cursor-pointer',
-            active === idx ? 'scale-125 ' : 'opacity-50',
-          ]"
-          @click="goTo(idx)"
-        ></span>
-      </div>
+  <div
+    class="w-full min-h-screen flex items-center justify-center px-6 py-12 mt-8"
+  >
+    <div
+      class="grid gap-8 w-full max-w-7xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      <img
+        v-for="(slide, idx) in slides"
+        :key="idx"
+        :src="slide.img"
+        :alt="`Imagem ${idx + 1}`"
+        class="w-full max-h-[500px] object-contain rounded-2xl border border-gray-200 shadow-sm bg-white p-4"
+        loading="lazy"
+        decoding="async"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-
-const slides = [
-  {
-    title: "Acessórios de Prata",
-    subtitle:
-      "O brilho ideal para todos os momentos. Feita com prata 925 legítima.",
-    button: "Ver detalhes",
-    href: "",
-    img: "/5.png",
-  },
-  {
-    title: "Anel com Zircônia",
-    subtitle: "Delicadeza e sofisticação em uma peça atemporal.",
-    button: "Ver mais",
-    href: "",
-    img: "/6.png",
-  },
-  {
-    title: "Acessórios de Prata",
-    subtitle:
-      "O brilho ideal para todos os momentos. Feita com prata 925 legítima.",
-    button: "Ver mais",
-    href: "",
-    img: "/2.png",
-  },
-];
-
-const active = ref(0);
-
-function next() {
-  active.value = (active.value + 1) % slides.length;
-}
-function prev() {
-  active.value = (active.value - 1 + slides.length) % slides.length;
-}
-function goTo(idx) {
-  active.value = idx;
-}
+const slides = [{ img: "/1.jpeg" }, { img: "/3.jpeg" }, { img: "/2.jpeg" }];
 </script>
-
-<style scoped></style>
