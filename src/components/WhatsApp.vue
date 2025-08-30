@@ -1,6 +1,11 @@
 <template>
   <div>
-    <button class="Btn">
+    <a
+      href="https://wa.me/5554994112420?text=Ol%C3%A1,%20vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es
+"
+      target="_blank"
+      class="Btn"
+    >
       <div class="sign">
         <svg class="socialSvg whatsappSvg" viewBox="0 0 16 16">
           <path
@@ -10,7 +15,7 @@
       </div>
 
       <div class="text">Whatsapp</div>
-    </button>
+    </a>
   </div>
 </template>
 

@@ -1,6 +1,5 @@
 <template>
   <div class="searchbar-group" ref="rootEl">
-    <i class="icon fa-solid fa-magnifying-glass"></i>
     <input
       v-model="q"
       :placeholder="placeholder"
@@ -8,6 +7,7 @@
       class="input"
       @focus="openPanel()"
     />
+    <i class="icon fa-solid fa-magnifying-glass"></i>
 
     <!-- Painel de resultados -->
     <div v-if="open && q.length >= minChars" class="panel" @keydown.stop>
@@ -47,43 +47,46 @@
     <!-- Modal do produto -->
     <div
       v-if="showModal && selectedProduct"
-      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+      class="modal-overlay"
       @click="closeModal"
     >
-      <div
-        class="bg-white rounded-lg shadow-lg p-8 relative max-w-md w-full"
-        @click.stop
-      >
-        <button class="p-2 absolute top-2 right-2" @click="closeModal">
-          <div
-            class="flex items-center justify-center cursor-pointer py-2 px-3 rounded-full bg-gray-100 hover:bg-gray-200"
-          >
-            <i class="fa-solid fa-xmark text-xl"></i>
-          </div>
+      <div class="modal-content" @click.stop>
+        <button class="modal-close" @click="closeModal">
+          <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <img
-          :src="selectedProduct.imagem_url || fallbackImg"
-          :alt="selectedProduct.nome"
-          class="w-80 h-80 mx-auto object-cover rounded-lg"
-        />
-        <h2 class="text-2xl font-bold text-center mt-4">
-          {{ selectedProduct.nome }}
-        </h2>
-        <p class="text-gray-600 text-center">
-          {{ selectedProduct.descricao }}
-        </p>
-        <p class="text-2xl font-bold text-center mt-4 text-gray-800">
-          {{ formatPrice(selectedProduct.preco ?? selectedProduct.valor) }}
-        </p>
+        <div class="modal-image-wrapper">
+          <img
+            :src="selectedProduct.imagem_url || fallbackImg"
+            :alt="selectedProduct.nome"
+            class="modal-image"
+          />
+        </div>
 
-        <div class="flex justify-center mt-6">
+        <div class="modal-info">
+          <h2 class="modal-title">
+            {{ selectedProduct.nome }}
+          </h2>
+          <p class="modal-description">
+            {{ selectedProduct.descricao }}
+          </p>
+          <p class="modal-price">
+            {{ formatPrice(selectedProduct.preco ?? selectedProduct.valor) }}
+          </p>
+
           <button
             :disabled="Number(selectedProduct.estoque) == 0"
             @click.stop="addProduct"
-            class="mt-4 w-full py-2 rounded-full bg-btn border-2 border-dark text-dark font-medium hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            class="modal-button"
+            :class="{
+              'modal-button-disabled': Number(selectedProduct.estoque) == 0,
+            }"
           >
-            {{ Number(selectedProduct.estoque) > 0 ? "Comprar" : "Esgotado" }}
+            {{
+              Number(selectedProduct.estoque) > 0
+                ? "Adicionar ao Carrinho"
+                : "Produto Esgotado"
+            }}
           </button>
         </div>
       </div>
@@ -338,31 +341,53 @@ const addProduct = () => {
   line-height: 28px;
   width: 100%;
 }
+
 .input {
   width: 100%;
   height: 40px;
-  padding: 0 1rem 0 2.5rem;
-  border: 2px solid transparent;
-  border-radius: 8px;
+  padding: 0 1.2rem 0 3.5rem;
+  border: 2px solid #ede5dd;
+  border-radius: 28px;
   outline: none;
-  background-color: #f3f3f4;
-  color: #0d0c22;
-  transition: 0.2s ease;
+  background-color: #ede5dd;
+  color: #232121;
+  font-size: 18px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(115, 94, 89, 0.1);
 }
+
 .input::placeholder {
-  color: #9e9ea7;
+  color: #735e59;
+  opacity: 0.7;
+  font-weight: 400;
 }
+
 .input:focus,
 .input:hover {
   border-color: #735e59;
-  background-color: #fff;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(115, 94, 89, 0.15);
+  transform: translateY(-1px);
 }
+
+.input:focus {
+  box-shadow: 0 4px 24px rgba(115, 94, 89, 0.2);
+}
+
 .icon {
   position: absolute;
-  left: 1rem;
-  color: #9e9ea7;
-  width: 1rem;
+  left: 1.4rem;
+  color: #735e59;
+  width: 1.4rem;
   height: 1rem;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.input:focus + .icon,
+.input:hover + .icon {
+  color: #735e59;
 }
 
 .panel {
@@ -371,77 +396,338 @@ const addProduct = () => {
   left: 0;
   right: 0;
   z-index: 50;
-  max-height: 420px; /* scroll aqui */
+  max-height: 480px;
   overflow: auto;
-  background: #fff;
-  border: 1px solid #e6e6e8;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  padding: 6px 0;
+  background: #ffffff;
+  border: 2px solid #ede5dd;
+  border-radius: 16px;
+  box-shadow: 0 16px 64px rgba(115, 94, 89, 0.15);
+  padding: 8px 0;
+  backdrop-filter: blur(10px);
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .item {
   display: grid;
-  grid-template-columns: 56px 1fr 18px;
-  gap: 10px;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 12px 16px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 0 8px;
 }
+
 .item:hover {
-  background: #f8f8f9;
+  background: linear-gradient(135deg, #ede5dd 0%, #f5f0e8 100%);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(115, 94, 89, 0.1);
 }
+
 .thumb {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
-  border-radius: 6px;
-  background: #f3f3f4;
+  border-radius: 12px;
+  background: #ede5dd;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(115, 94, 89, 0.1);
+  transition: all 0.2s ease;
 }
+
+.item:hover .thumb {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(115, 94, 89, 0.15);
+}
+
 .meta {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-.title {
-  font-size: 12px;
-  line-height: 1.2;
-}
-.price-row {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-}
-.price {
-  font-weight: 700;
-  font-size: 14px;
-}
-.muted {
-  color: #7b7b84;
-  font-size: 12px;
-}
-.arrow {
-  font-size: 18px;
-  color: #bdbdc5;
+  gap: 6px;
+  min-width: 0;
 }
 
-.see-all {
-  display: block;
-  width: 100%;
-  text-align: center;
-  background: transparent;
-  border: 0;
-  color: #2a66f1;
+.title {
+  font-size: 12px;
   font-weight: 600;
-  padding: 10px 0;
-  cursor: pointer;
+  line-height: 1.4;
+  color: #232121;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.price-row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.price {
+  font-weight: 700;
+  font-size: 16px;
+  color: #735e59;
+  background: linear-gradient(135deg, #735e59 0%, #b9a994 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.muted {
+  color: #735e59;
+  opacity: 0.7;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.state {
+  padding: 20px;
+  text-align: center;
+  color: #735e59;
+  font-weight: 500;
 }
 
 .sentinel {
   height: 1px;
 }
-.state {
-  padding: 12px;
+
+/* Scrollbar personalizada */
+.panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel::-webkit-scrollbar-track {
+  background: #ede5dd;
+  border-radius: 3px;
+}
+
+.panel::-webkit-scrollbar-thumb {
+  background: #b9a994;
+  border-radius: 3px;
+}
+
+.panel::-webkit-scrollbar-thumb:hover {
+  background: #735e59;
+}
+
+/* Estilos do Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(115, 94, 89, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #ffffff 0%, #fdfcfa 100%);
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(115, 94, 89, 0.3);
+  position: relative;
+  max-width: 420px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 2px solid #ede5dd;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #ede5dd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  color: #735e59;
+  font-size: 16px;
+}
+
+.modal-close:hover {
+  background: #ede5dd;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(115, 94, 89, 0.2);
+}
+
+.modal-image-wrapper {
+  padding: 24px 24px 0;
+}
+
+.modal-image {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 16px;
+  background: #ede5dd;
+  box-shadow: 0 8px 24px rgba(115, 94, 89, 0.15);
+}
+
+.modal-info {
+  padding: 20px 24px 24px;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #232121;
   text-align: center;
+  margin-bottom: 12px;
+  font-family: "Prata", serif;
+  line-height: 1.2;
+}
+
+.modal-description {
+  color: #735e59;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.modal-price {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #735e59 0%, #b9a994 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: "Prata", serif;
+}
+
+.modal-button {
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ede5dd 0%, #f5f0e8 100%);
+  border: 2px solid #735e59;
+  color: #735e59;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(115, 94, 89, 0.1);
+}
+
+.modal-button:hover:not(.modal-button-disabled) {
+  background: linear-gradient(135deg, #735e59 0%, #b9a994 100%);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(115, 94, 89, 0.2);
+}
+
+.modal-button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f3f3f4;
+  border-color: #e6e6e8;
+  color: #9e9ea7;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .input {
+    height: 52px;
+    padding: 0 1rem 0 3rem;
+    font-size: 16px;
+    border-radius: 26px;
+  }
+
+  .icon {
+    left: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .panel {
+    top: 56px;
+  }
+
+  .item {
+    padding: 10px 12px;
+    grid-template-columns: 56px 1fr;
+    gap: 10px;
+  }
+
+  .thumb {
+    width: 56px;
+    height: 56px;
+  }
+
+  .title {
+    font-size: 11px;
+  }
+
+  .price {
+    font-size: 14px;
+  }
+
+  .modal-content {
+    max-width: 350px;
+    margin: 20px;
+  }
+
+  .modal-image {
+    height: 240px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+  }
+
+  .modal-price {
+    font-size: 24px;
+  }
+
+  .modal-button {
+    padding: 14px 20px;
+    font-size: 14px;
+  }
 }
 </style>

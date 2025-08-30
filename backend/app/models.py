@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String, Text, Numeric, TIMESTAMP
+from sqlalchemy import Column, Integer, String, Text, Numeric, TIMESTAMP, text
 from sqlalchemy.sql import func
+from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.ext.mutable import MutableList
 from .db import Base
 
 class Produto(Base):
@@ -11,6 +13,11 @@ class Produto(Base):
     preco = Column(Numeric(10, 2), nullable=False)
     estoque = Column(Integer, nullable=False, default=0)
     categoria = Column(String(100))
-    imagem_path = Column(String)
+    imagem_path = Column(
+        MutableList.as_mutable(ARRAY(Text)),
+        nullable=False,
+        default=list,                                 
+        server_default=text("ARRAY[]::text[]")        
+    )
     criado_em = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
     atualizado_em = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)

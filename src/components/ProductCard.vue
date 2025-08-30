@@ -1,101 +1,90 @@
 <template>
   <div>
     <div
-      class="w-72 h-full bg-white rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-300 cursor-pointer overflow-hidden flex flex-col"
-      @click="showModal = true"
+      class="w-72 h-full bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer overflow-hidden flex flex-col border border-gray-100 hover:border-[#b9a994] group"
+      @click="openProductModal"
     >
       <!-- Imagem em destaque -->
-      <div class="relative w-full bg-gray-100 flex items-center justify-center">
+      <div
+        class="relative w-full h-52 bg-gradient-to-br from-[#ede5dd] to-[#f5f0ea] overflow-hidden"
+      >
+        <!-- Imagem principal -->
         <img
           :src="product.imagem_url"
           alt="Produto"
-          class="object-cover w-full h-48 transition-transform duration-300 hover:scale-105"
+          class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+          :class="{ 'group-hover:opacity-0': hasSecondImage }"
+          loading="lazy"
+          @error="$event.target.style.display = 'none'"
+          @load="$event.target.style.display = 'block'"
+        />
+
+        <!-- Segunda imagem (aparece no hover) -->
+        <img
+          v-if="hasSecondImage"
+          :src="product.imagens_url[1]"
+          alt="Produto - Vista adicional"
+          class="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-110"
+          loading="lazy"
+          @error="$event.target.style.display = 'none'"
+          @load="$event.target.style.display = 'block'"
         />
 
         <!-- Tag de estoque -->
         <span
           v-if="product.estoque > 0"
-          class="absolute top-2 right-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md"
+          class="absolute top-3 right-3 bg-[#735e59] text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm bg-opacity-90"
         >
-          {{ product.estoque }} unid.
+          {{ product.estoque }} em estoque
         </span>
 
         <!-- Se quiser mostrar "Esgotado" -->
         <span
           v-else
-          class="absolute top-2 right-2 bg-gray-400 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md"
+          class="absolute top-3 right-3 bg-gray-500 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm bg-opacity-90"
         >
           Esgotado
         </span>
       </div>
 
       <!-- Conteúdo -->
-      <div class="flex-1 p-4 flex flex-col justify-between text-center">
-        <div>
-          <h3 class="text-lg font-semibold text-gray-800 truncate">
+      <div class="flex-1 p-5 flex flex-col justify-between">
+        <div class="text-center space-y-3">
+          <h3
+            class="text-xl font-semibold text-[#735e59] truncate font-['Prata',serif] tracking-wide"
+          >
             {{ product.nome }}
           </h3>
-          <p class="text-sm text-gray-500 line-clamp-2">
+          <p
+            class="text-sm text-[#735e59] text-opacity-70 line-clamp-2 leading-relaxed px-2"
+          >
             {{ product.descricao }}
           </p>
-          <div class="mt-3 text-xl font-bold text-gray-800">
-            {{ precoBRL }}
+          <div class="pt-2">
+            <div class="text-2xl font-bold text-[#735e59] font-['Prata',serif]">
+              {{ precoBRL }}
+            </div>
           </div>
         </div>
 
         <button
           :disabled="Number(product.estoque) == 0"
           @click.stop="addProduct"
-          class="mt-4 w-full py-2 rounded-full bg-btn border-2 border-dark text-dark font-medium hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          class="mt-6 w-full py-3 rounded-full bg-[#ede5dd] border-2 border-[#735e59] text-[#735e59] font-medium hover:bg-[#735e59] hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#ede5dd] disabled:hover:text-[#735e59] shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
         >
-          {{ Number(product.estoque) > 0 ? "Comprar" : "Esgotado" }}
+          {{
+            Number(product.estoque) > 0
+              ? "Adicionar ao Carrinho"
+              : "Produto Esgotado"
+          }}
         </button>
-      </div>
-    </div>
-
-    <!-- Modal -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-    >
-      <div
-        class="bg-white rounded-lg shadow-lg p-8 relative max-w-md w-full"
-        @click.stop
-      >
-        <button class="p-2 absolute top-2 right-2" @click="showModal = false">
-          <div
-            class="flex items-center justify-center cursor-pointer py-2 px-3 rounded-full bg-gray-100 hover:bg-gray-200"
-          >
-            <i class="fa-solid fa-xmark text-xl"></i>
-          </div>
-        </button>
-
-        <img
-          :src="product.imagem_url"
-          alt="Produto"
-          class="w-80 h-80 mx-auto object-cover rounded-lg"
-        />
-        <h2 class="text-2xl font-bold text-center mt-4">{{ product.nome }}</h2>
-        <p class="text-gray-600 text-center">{{ product.descricao }}</p>
-        <p class="text-2xl font-bold text-center mt-4 text-gray-800">
-          {{ precoBRL }}
-        </p>
-
-        <div class="flex justify-center mt-6">
-          <button
-            @click="addProduct"
-            class="px-10 py-3 bg-btn text-lg text-dark font-medium rounded-full border-2 border-dark hover:brightness-110 transition"
-          >
-            Comprar
-          </button>
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { cartStore } from "../store/cartStore";
 
 const props = defineProps({
@@ -105,13 +94,25 @@ const props = defineProps({
   },
 });
 
-const showModal = ref(false);
+const emit = defineEmits(["open-modal"]);
 
 const precoBRL = computed(() =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
     Number(props.product?.preco ?? 0)
   )
 );
+
+const hasSecondImage = computed(() => {
+  return props.product?.imagens_url && props.product.imagens_url.length > 1;
+});
+
+const hasMultipleImages = computed(() => {
+  return props.product?.imagens_url && props.product.imagens_url.length > 1;
+});
+
+const openProductModal = () => {
+  emit("open-modal", props.product);
+};
 
 const addProduct = () => {
   cartStore.addItem({
@@ -125,6 +126,5 @@ const addProduct = () => {
     qty: 1,
   });
   cartStore.openCart();
-  showModal.value = false;
 };
 </script>

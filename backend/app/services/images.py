@@ -63,3 +63,24 @@ def signed_url(path: str, expires: int = 3600) -> Optional[str]:
         return supabase.storage.from_(BUCKET).get_public_url(path)
     signed = supabase.storage.from_(BUCKET).create_signed_url(path, expires_in=expires)
     return signed["signedURL"]
+
+def delete_image(path: str) -> bool:
+    """
+    Exclui uma imagem do Supabase Storage
+    
+    Args:
+        path: Caminho da imagem no storage
+        
+    Returns:
+        bool: True se a exclusão foi bem-sucedida, False caso contrário
+    """
+    if not path:
+        return True  # Se não há path, considera como sucesso
+    
+    try:
+        supabase = _supabase()
+        response = supabase.storage.from_(BUCKET).remove([path])
+        return True
+    except Exception as e:
+        print(f"Erro ao excluir imagem do Supabase: {e}")
+        return False

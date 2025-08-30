@@ -1,41 +1,86 @@
 import { reactive, watch } from "vue";
 
-const STORAGE_KEY = "cart:items:v1";
+const STORAGE_KEY = "cart:data:v1"; // troquei nome para deixar claro que guarda mais do que items
 
-function loadItemsFromStorage() {
+function loadFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    if (!Array.isArray(arr)) return [];
-    return arr.map((i) => ({
-      key: i.key ?? i.id ?? i.title,
-      id: i.id ?? null,
-      title: i.title ?? "",
-      description: i.description ?? "",
-      category: i.category ?? "",
-      img: i.img ?? "",
-      price: Number(i.price) || 0,
-      stok: Number(i.stok) || 0, // estoque disponível
-      qty: Number(i.qty) || 1,
-    }));
+    if (!raw)
+      return {
+        items: [],
+        cep: "",
+        shippingSelected: null,
+        shippingOptions: [],
+      };
+    const obj = JSON.parse(raw);
+
+    // garante que tem estrutura mínima
+    if (typeof obj !== "object" || obj === null)
+      return {
+        items: [],
+        cep: "",
+        shippingSelected: null,
+        shippingOptions: [],
+      };
+
+    // normaliza itens
+    const items = Array.isArray(obj.items)
+      ? obj.items.map((i) => ({
+          key: i.key ?? i.id ?? i.title,
+          id: i.id ?? null,
+          title: i.title ?? "",
+          description: i.description ?? "",
+          category: i.category ?? "",
+          img: i.img ?? "",
+          price: Number(i.price) || 0,
+          stok: Number(i.stok) || 0,
+          qty: Number(i.qty) || 1,
+        }))
+      : [];
+
+    return {
+      items,
+      cep: obj.cep ?? "",
+      shippingSelected: obj.shippingSelected ?? null,
+      shippingOptions: Array.isArray(obj.shippingOptions)
+        ? obj.shippingOptions
+        : [],
+    };
   } catch {
-    return [];
+    return {
+      items: [],
+      cep: "",
+      shippingSelected: null,
+      shippingOptions: [],
+    };
   }
 }
 
-function saveItemsToStorage(items) {
+function saveToStorage(state) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        items: state.items,
+        cep: state.cep,
+        shippingSelected: state.shippingSelected,
+        shippingOptions: state.shippingOptions,
+      })
+    );
   } catch {}
 }
 
 let errorTimer = null;
 
+const initial = loadFromStorage();
+
 export const cartStore = reactive({
   open: false,
-  items: loadItemsFromStorage(),
-  error: null, // mensagem de erro visível na UI
+  items: initial.items,
+  error: null,
+  cep: initial.cep,
+  shippingSelected: initial.shippingSelected,
+  shippingOptions: initial.shippingOptions,
 
   openCart() {
     this.open = true;
@@ -56,10 +101,6 @@ export const cartStore = reactive({
     return p.id ?? p.title;
   },
 
-  /**
-   * Adiciona item respeitando o estoque (stok).
-   * Retorna { ok: boolean, message?: string }
-   */
   addItem(product) {
     const priceNumber =
       typeof product.price === "string"
@@ -68,18 +109,13 @@ export const cartStore = reactive({
 
     const key = this._keyOf(product);
     const incomingQty = Number(product.qty ?? 1);
-
-    // estoque informado no payload ou existente no carrinho
     const stokIncoming = Number(product.stok ?? 0);
 
     const existing = this.items.find((i) => i.key === key);
     const currentQty = existing ? Number(existing.qty) : 0;
     const currentStok = existing ? Number(existing.stok) : stokIncoming;
 
-    // Se não temos informação de estoque, consideramos 0 (bloqueia compra)
     const effectiveStok = Number.isFinite(currentStok) ? currentStok : 0;
-
-    // Quantidade após adicionar
     const finalQty = currentQty + incomingQty;
 
     if (effectiveStok <= 0) {
@@ -100,11 +136,10 @@ export const cartStore = reactive({
 
     if (existing) {
       existing.qty = finalQty;
-      // garante que estoque e preço estejam sincronizados
       if (stokIncoming) existing.stok = Number(stokIncoming);
       if (priceNumber) existing.price = priceNumber;
     } else {
-      this.items.push({
+      this.items.unshift({
         key,
         id: product.id ?? null,
         title: product.title ?? "",
@@ -112,7 +147,7 @@ export const cartStore = reactive({
         category: product.category ?? "",
         img: product.img ?? "",
         price: priceNumber,
-        stok: effectiveStok, // salva estoque no item
+        stok: effectiveStok,
         qty: incomingQty,
       });
     }
@@ -152,6 +187,8 @@ export const cartStore = reactive({
     const idx = this.items.findIndex((i) => i.key === key);
     if (idx > -1) this.items.splice(idx, 1);
     if (this.items.length === 0) {
+      this.shippingSelected = null;
+      this.shippingOptions = [];
       try {
         localStorage.removeItem(STORAGE_KEY);
       } catch {}
@@ -160,9 +197,27 @@ export const cartStore = reactive({
 
   clear() {
     this.items.splice(0);
+    this.shippingSelected = null;
+    this.cep = "";
+    this.shippingOptions = [];
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
+  },
+
+  // Setter para CEP
+  setCep(cep) {
+    this.cep = cep;
+  },
+
+  // Setter para objeto shipping completo
+  setShippingSelected(shipping) {
+    this.shippingSelected = shipping;
+  },
+
+  // Setter para opções de frete
+  setShippingOptions(options) {
+    this.shippingOptions = options;
   },
 
   get count() {
@@ -173,9 +228,10 @@ export const cartStore = reactive({
   },
 });
 
+// 🔄 salva sempre que items, cep, shippingSelected ou shippingOptions mudar
 watch(
-  () =>
-    cartStore.items.map((i) => ({
+  () => ({
+    items: cartStore.items.map((i) => ({
       key: i.key,
       id: i.id,
       title: i.title,
@@ -186,6 +242,10 @@ watch(
       stok: i.stok,
       qty: i.qty,
     })),
-  (items) => saveItemsToStorage(items),
+    cep: cartStore.cep,
+    shippingSelected: cartStore.shippingSelected,
+    shippingOptions: cartStore.shippingOptions,
+  }),
+  (state) => saveToStorage(state),
   { deep: true }
 );
