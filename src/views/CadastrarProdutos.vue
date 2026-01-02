@@ -16,25 +16,11 @@
 
     <div class="max-w-4xl mx-auto px-6 lg:px-8 relative z-10">
       <div class="text-center mb-12">
-        <div class="inline-flex items-center justify-center mb-4">
-          <div
-            class="h-px bg-gradient-to-r from-transparent via-[#735e59] to-transparent w-24"
-          ></div>
-          <i
-            class="fa-solid fa-gem mx-4 text-2xl text-[#735e59] animate-pulse"
-          ></i>
-          <div
-            class="h-px bg-gradient-to-r from-transparent via-[#735e59] to-transparent w-24"
-          ></div>
-        </div>
         <h1
           class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-[#735e59] via-[#b9a994] to-[#735e59] bg-clip-text text-transparent font-['Prata',serif] tracking-wider mb-4 transform transition-all duration-700 hover:scale-105 cursor-pointer"
         >
           CADASTRAR PRODUTOS
         </h1>
-        <p class="text-lg text-[#735e59]/80 max-w-2xl mx-auto leading-relaxed">
-          Gerencie seu catálogo de joias com facilidade e elegância
-        </p>
       </div>
 
       <form
@@ -56,6 +42,7 @@
           </label>
           <div class="flex gap-3">
             <input
+              v-if="!limiteImagensAtingido"
               type="file"
               accept="image/*"
               multiple
@@ -64,6 +51,7 @@
               @change="onCreateImagesChange"
             />
             <button
+              v-if="!limiteImagensAtingido"
               type="button"
               @click="addMoreImages"
               class="w-full px-4 py-3 border-2 border-[#735e59] rounded-xl hover:bg-[#735e59] hover:text-white transition-all duration-300 text-sm font-medium text-[#735e59] group shadow-sm hover:shadow-md transform hover:-translate-y-0.5 cursor-pointer"
@@ -73,6 +61,14 @@
               ></i>
               Adicionar Imagem
             </button>
+            <div
+              v-else
+              class="w-full px-4 py-3 border-2 border-amber-400 bg-amber-50 rounded-xl text-amber-800 text-sm font-medium"
+            >
+              <i class="fa-solid fa-circle-info"></i>
+              Limite de produtos com imagens atingido (máximo 2). Site ainda não
+              possui um banco de dados para armazenar mais produtos com imagens.
+            </div>
           </div>
           <div
             v-if="createImagesPreview.length > 0"
@@ -213,6 +209,7 @@
               </label>
               <div class="flex gap-3">
                 <input
+                  v-if="!limiteImagensAtingido"
                   type="file"
                   accept="image/*"
                   multiple
@@ -221,6 +218,7 @@
                   @change="onEditImagesChange"
                 />
                 <button
+                  v-if="!limiteImagensAtingido"
                   type="button"
                   @click="addMoreImagesEdit"
                   class="w-full px-4 py-4 md:py-3 border-2 border-[#735e59] rounded-xl hover:bg-[#735e59] active:bg-[#5a4a46] hover:text-white transition-all duration-300 text-base md:text-sm font-medium text-[#735e59] group shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer touch-manipulation min-h-[48px] md:min-h-[44px]"
@@ -230,6 +228,15 @@
                   ></i>
                   Adicionar Imagem
                 </button>
+                <div
+                  v-else
+                  class="w-full px-4 py-3 border-2 border-amber-400 bg-amber-50 rounded-xl text-amber-800 text-sm font-medium"
+                >
+                  <i class="fa-solid fa-circle-info"></i>
+                  Limite de produtos com imagens atingido (máximo 2). Site ainda
+                  não possui um banco de dados para armazenar mais produtos com
+                  imagens.
+                </div>
               </div>
               <div v-if="getImagensUrls(p).length > 0" class="mt-4 md:mt-4">
                 <p
@@ -508,11 +515,24 @@
         </p>
       </div>
     </div>
+
+    <!-- Sistema de Notificações -->
+    <div class="fixed bottom-6 right-6 z-50 space-y-3">
+      <Notification
+        v-for="(notification, index) in notifications"
+        :key="notification.id"
+        :title="notification.title"
+        :description="notification.description"
+        :type="notification.type"
+        :duration="notification.duration || 5000"
+        @close="removeNotification(notification.id)"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import {
   getProdutos,
   createProduto,
@@ -522,9 +542,12 @@ import {
   deleteImagemProduto,
   getImagensProduto,
 } from "/src/api.js";
+import Notification from "/src/components/Notification.vue";
 
 const produtos = ref([]);
 const loading = ref(false);
+const notifications = ref([]);
+let notificationIdCounter = 0;
 
 const createForm = ref({
   nome: "",
@@ -659,11 +682,24 @@ function deleteImagemExistente(produtoId, imagemIndex) {
   if (!confirm("Tem certeza que deseja excluir esta imagem?")) return;
 
   deleteImagemProduto(produtoId, imagemIndex)
-    .then(() => fetchProdutos())
+    .then(() => {
+      fetchProdutos();
+      showNotification(
+        "Imagem excluída",
+        "A imagem foi excluída com sucesso.",
+        "success"
+      );
+    })
     .catch((err) => {
       console.error("Erro ao excluir imagem:", err);
       if (err.message && err.message.includes("Quota")) {
-        alert("Erro ao excluir imagem: " + err.message);
+        showNotification("Erro ao excluir imagem", err.message, "error", 7000);
+      } else {
+        showNotification(
+          "Erro ao excluir imagem",
+          "Ocorreu um erro ao tentar excluir a imagem. Tente novamente.",
+          "error"
+        );
       }
     });
 }
@@ -680,6 +716,17 @@ function getImagensUrls(produto) {
   return [];
 }
 
+const produtosComImagens = computed(() => {
+  return produtos.value.filter((p) => {
+    const imagens = getImagensUrls(p);
+    return imagens.length > 0;
+  }).length;
+});
+
+const limiteImagensAtingido = computed(() => {
+  return produtosComImagens.value >= 2;
+});
+
 function normalizeCategoria(value) {
   if (!value) return "";
   return value.replace(/\s+/g, "-").replace(/\//g, "-");
@@ -690,6 +737,24 @@ function formatPrice(price) {
     style: "currency",
     currency: "BRL",
   }).format(Number(price ?? 0));
+}
+
+function showNotification(title, description, type = "error", duration = 5000) {
+  const id = ++notificationIdCounter;
+  notifications.value.push({
+    id,
+    title,
+    description,
+    type,
+    duration,
+  });
+}
+
+function removeNotification(id) {
+  const index = notifications.value.findIndex((n) => n.id === id);
+  if (index > -1) {
+    notifications.value.splice(index, 1);
+  }
 }
 
 function fetchProdutos() {
@@ -726,12 +791,18 @@ function onCreate() {
       createImagesFiles.value = [];
       createImagesPreview.value = [];
 
+      showNotification(
+        "Produto criado",
+        "O produto foi adicionado com sucesso!",
+        "success"
+      );
+
       return fetchProdutos();
     })
     .catch((err) => {
       console.error("Erro ao criar produto:", err);
-      let mensagem =
-        "Erro ao criar produto. Verifique os dados e tente novamente.";
+      let titulo = "Erro ao criar produto";
+      let descricao = "Verifique os dados e tente novamente.";
 
       if (
         err.message &&
@@ -739,8 +810,8 @@ function onCreate() {
           err.message.includes("Quota") ||
           err.message.includes("localStorage está cheio"))
       ) {
-        mensagem =
-          "⚠️ Armazenamento Local Cheio\n\n" +
+        titulo = "⚠️ Armazenamento Local Cheio";
+        descricao =
           "O navegador não tem mais espaço para armazenar dados.\n\n" +
           "Soluções:\n" +
           "1. Exclua produtos antigos ou suas imagens\n" +
@@ -751,10 +822,10 @@ function onCreate() {
           "3. Use um backend para armazenar imagens\n\n" +
           "Nota: As imagens foram comprimidas automaticamente, mas o espaço ainda é insuficiente.";
       } else if (err.message) {
-        mensagem = err.message;
+        descricao = err.message;
       }
 
-      alert(mensagem);
+      showNotification(titulo, descricao, "error", 8000);
     })
     .finally(() => {
       loading.value = false;
@@ -792,12 +863,17 @@ function onSave(id) {
     })
     .then(() => {
       editId.value = null;
+      showNotification(
+        "Produto atualizado",
+        "As alterações foram salvas com sucesso!",
+        "success"
+      );
       return fetchProdutos();
     })
     .catch((err) => {
       console.error("Erro ao atualizar produto:", err);
-      let mensagem =
-        "Erro ao atualizar produto. Verifique os dados e tente novamente.";
+      let titulo = "Erro ao atualizar produto";
+      let descricao = "Verifique os dados e tente novamente.";
 
       if (
         err.message &&
@@ -805,8 +881,8 @@ function onSave(id) {
           err.message.includes("Quota") ||
           err.message.includes("localStorage está cheio"))
       ) {
-        mensagem =
-          "⚠️ Armazenamento Local Cheio\n\n" +
+        titulo = "⚠️ Armazenamento Local Cheio";
+        descricao =
           "O navegador não tem mais espaço para armazenar dados.\n\n" +
           "Soluções:\n" +
           "1. Exclua produtos antigos ou suas imagens\n" +
@@ -817,10 +893,10 @@ function onSave(id) {
           "3. Use um backend para armazenar imagens\n\n" +
           "Nota: Os dados do produto foram salvos, mas as imagens podem não ter sido adicionadas.";
       } else if (err.message) {
-        mensagem = err.message;
+        descricao = err.message;
       }
 
-      alert(mensagem);
+      showNotification(titulo, descricao, "error", 8000);
     })
     .finally(() => {
       loading.value = false;
@@ -830,8 +906,22 @@ function onSave(id) {
 function onDelete(id) {
   if (!confirm("Tem certeza que deseja excluir este produto?")) return;
   deleteProdutoById(id)
-    .then(() => fetchProdutos())
-    .catch((err) => console.error("Erro ao excluir produto:", err));
+    .then(() => {
+      fetchProdutos();
+      showNotification(
+        "Produto excluído",
+        "O produto foi removido com sucesso.",
+        "success"
+      );
+    })
+    .catch((err) => {
+      console.error("Erro ao excluir produto:", err);
+      showNotification(
+        "Erro ao excluir produto",
+        "Ocorreu um erro ao tentar excluir o produto. Tente novamente.",
+        "error"
+      );
+    });
 }
 
 onMounted(() => {

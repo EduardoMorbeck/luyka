@@ -7,25 +7,35 @@
       <div
         class="relative w-full h-52 bg-gradient-to-br from-[#ede5dd] to-[#f5f0ea] overflow-hidden"
       >
-        <img
-          :src="product.imagem_url"
-          alt="Produto"
-          class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-          :class="{ 'group-hover:opacity-0': hasSecondImage }"
-          loading="lazy"
-          @error="$event.target.style.display = 'none'"
-          @load="$event.target.style.display = 'block'"
-        />
+        <template v-if="hasImage">
+          <img
+            :src="product.imagem_url"
+            alt="Produto"
+            class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+            :class="{ 'group-hover:opacity-0': hasSecondImage }"
+            loading="lazy"
+            @error="$event.target.style.display = 'none'"
+            @load="$event.target.style.display = 'block'"
+          />
 
-        <img
-          v-if="hasSecondImage"
-          :src="product.imagens_url[1]"
-          alt="Produto - Vista adicional"
-          class="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-110"
-          loading="lazy"
-          @error="$event.target.style.display = 'none'"
-          @load="$event.target.style.display = 'block'"
-        />
+          <img
+            v-if="hasSecondImage"
+            :src="product.imagens_url[1]"
+            alt="Produto - Vista adicional"
+            class="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-110"
+            loading="lazy"
+            @error="$event.target.style.display = 'none'"
+            @load="$event.target.style.display = 'block'"
+          />
+        </template>
+
+        <div
+          v-else
+          class="absolute inset-0 w-full h-full flex flex-col items-center justify-center text-[#b9a994]"
+        >
+          <i class="fa-solid fa-image text-5xl mb-3"></i>
+          <p class="text-sm font-medium">Produto sem Imagem</p>
+        </div>
 
         <span
           v-if="product.estoque > 0"
@@ -50,7 +60,7 @@
             {{ product.nome }}
           </h3>
           <p
-            class="text-sm text-[#735e59] text-opacity-70 line-clamp-2 leading-relaxed px-2"
+            class="text-sm text-[#735e59] truncate text-opacity-70 line-clamp-2 leading-relaxed px-2"
           >
             {{ product.descricao }}
           </p>
@@ -95,6 +105,10 @@ const precoBRL = computed(() =>
     Number(props.product?.preco ?? 0)
   )
 );
+
+const hasImage = computed(() => {
+  return props.product?.imagem_url && props.product.imagem_url.trim() !== "";
+});
 
 const hasSecondImage = computed(() => {
   return props.product?.imagens_url && props.product.imagens_url.length > 1;
