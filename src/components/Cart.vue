@@ -55,7 +55,7 @@
               </div>
             </div>
             <button
-              class="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+              class="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors cursor-pointer"
               @click="cartStore.closeCart()"
               aria-label="Fechar carrinho"
             >
@@ -66,7 +66,6 @@
           </div>
         </header>
 
-        <!-- Seção de Produtos -->
         <section
           class="bg-white mx-4 rounded-2xl shadow-lg border border-[#ede5dd] mb-4"
         >
@@ -86,7 +85,7 @@
               <div
                 v-for="item in cartStore.items"
                 :key="item.key"
-                class="bg-[#ede5dd] rounded-xl p-4 mb-3 last:mb-0 hover:bg-[#b9a994] hover:bg-opacity-30 transition-all duration-200"
+                class="bg-[#ede5dd] rounded-xl p-4 mb-3 last:mb-0 hover:bg-[#b9a994] hover:bg-opacity-30 transition-all duration-200 cursor-pointer"
               >
                 <div class="flex gap-4">
                   <img
@@ -102,7 +101,7 @@
                         {{ item.title }}
                       </h3>
                       <button
-                        class="p-1 px-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors"
+                        class="p-1 px-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors cursor-pointer"
                         @click.stop="cartStore.removeItem(item.key)"
                         aria-label="Remover produto"
                         title="Remover"
@@ -129,7 +128,7 @@
                         class="inline-flex items-center bg-white border-2 border-[#b9a994] rounded-full shadow-sm"
                       >
                         <button
-                          class="flex items-center justify-center w-8 h-8 hover:bg-[#ede5dd] rounded-full transition-colors"
+                          class="flex items-center justify-center w-8 h-8 hover:bg-[#ede5dd] rounded-full transition-colors cursor-pointer"
                           @click.stop="cartStore.decrement(item.key)"
                           aria-label="Diminuir quantidade"
                           title="Diminuir"
@@ -204,7 +203,6 @@
           </div>
         </section>
 
-        <!-- Seção de Presente -->
         <section
           v-if="cartStore.items.length > 0"
           class="bg-white mx-4 rounded-2xl shadow-lg border border-[#ede5dd] mb-4"
@@ -274,7 +272,6 @@
           </div>
         </section>
 
-        <!-- Seção de Frete -->
         <section
           v-if="cartStore.items.length > 0"
           class="bg-white mx-4 rounded-2xl shadow-lg border border-[#ede5dd] mb-4"
@@ -326,7 +323,7 @@
               </div>
 
               <button
-                class="px-6 py-3 bg-gradient-to-r from-[#735e59] to-[#b9a994] text-white font-semibold rounded-xl hover:from-[#b9a994] hover:to-[#735e59] focus:outline-none focus:ring-4 focus:ring-[#ede5dd] transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                class="px-6 py-3 bg-gradient-to-r from-[#735e59] to-[#b9a994] text-white font-semibold rounded-xl hover:from-[#b9a994] hover:to-[#735e59] focus:outline-none focus:ring-4 focus:ring-[#ede5dd] transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none cursor-pointer"
                 @click="onCalcularFrete"
                 :disabled="isCalculating || cepDigits.length !== 8"
                 aria-label="Calcular frete"
@@ -371,7 +368,6 @@
               {{ freteError }}
             </div>
 
-            <!-- FORMAS DE ENVIO -->
             <div v-if="shippingOptions.length" class="space-y-3">
               <h3
                 class="text-sm font-semibold text-[#232121] flex items-center gap-2"
@@ -442,7 +438,6 @@
           </div>
         </section>
 
-        <!-- Seção de Resumo -->
         <section
           v-if="cartStore.items.length > 0"
           class="bg-white mx-4 rounded-2xl shadow-lg border border-[#ede5dd] mb-4"
@@ -491,12 +486,11 @@
           </div>
         </section>
 
-        <!-- Botões de Ação -->
         <div class="p-4 space-y-3">
           <div v-if="cartStore.items.length > 0" class="w-full">
             <a
               href="/entrega"
-              class="w-full text-center px-8 py-4 text-xl bg-gradient-to-r from-[#735e59] to-[#b9a994] text-white font-bold rounded-2xl shadow-lg hover:from-[#b9a994] hover:to-[#735e59] focus:outline-none focus:ring-4 focus:ring-[#ede5dd] transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-3"
+              class="w-full text-center px-8 py-4 text-xl bg-gradient-to-r from-[#735e59] to-[#b9a994] text-white font-bold rounded-2xl shadow-lg hover:from-[#b9a994] hover:to-[#735e59] focus:outline-none focus:ring-4 focus:ring-[#ede5dd] transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer"
             >
               <i class="fa-solid fa-arrow-right"></i>
               Iniciar Compra
@@ -505,7 +499,7 @@
 
           <button
             @click="cartStore.closeCart()"
-            class="w-full px-8 py-3 text-lg text-[#735e59] hover:text-[#232121] font-semibold hover:bg-white hover:bg-opacity-50 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
+            class="w-full px-8 py-3 text-lg text-[#735e59] hover:text-[#232121] font-semibold hover:bg-white hover:bg-opacity-50 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
           >
             <i class="fa-solid fa-shopping-bag"></i>
             Continuar Comprando
@@ -535,19 +529,16 @@ const isCalculating = ref(false);
 const freteResp = ref([]);
 const freteError = ref("");
 
-// Helpers
 const formatBRL = (n) =>
   (Number(n) || 0).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
-// Converte string de preço com . ou , (em qualquer combinação) para Number
 function toNumberFlexible(input) {
   if (typeof input === "number") return input;
   let s = String(input || "").trim();
 
-  // remove símbolos e espaços (R$, $, etc.)
   s = s.replace(/[^\d.,-]/g, "");
   if (!s) return 0;
 
@@ -555,17 +546,14 @@ function toNumberFlexible(input) {
   const hasDot = s.includes(".");
 
   if (hasComma && hasDot) {
-    // Assume que o último separador (direita) é o decimal
     const lastSepIdx = Math.max(s.lastIndexOf(","), s.lastIndexOf("."));
     const intPart = s.slice(0, lastSepIdx).replace(/[.,]/g, "");
     const fracPart = s.slice(lastSepIdx + 1);
     s = `${intPart}.${fracPart}`;
   } else if (hasComma && !hasDot) {
-    // Vírgula como decimal
-    s = s.replace(/\./g, ""); // milhares (se houver)
+    s = s.replace(/\./g, "");
     s = s.replace(",", ".");
   } else {
-    // Ponto como decimal; remove vírgulas de milhares
     s = s.replace(/,/g, "");
   }
 
@@ -579,7 +567,6 @@ const cepInvalid = computed(
 );
 
 function maskCep() {
-  // 00000-000
   const digits = cep.value.replace(/\D/g, "").slice(0, 8);
   if (digits.length <= 5) {
     cep.value = digits;
@@ -588,21 +575,18 @@ function maskCep() {
   }
 }
 
-// Inicializa o CEP com o valor salvo no store
 onMounted(() => {
   if (cartStore.cep) {
     cep.value = cartStore.cep;
   }
-  // Se já temos opções de frete salvas, usamos elas
   if (cartStore.shippingOptions.length > 0) {
     freteResp.value = cartStore.shippingOptions;
   }
 });
 
-// Cálculo de frete
 async function onCalcularFrete() {
   freteError.value = "";
-  cartStore.setShippingSelected(null); // limpa seleção ao recalcular
+  cartStore.setShippingSelected(null);
 
   const digits = cepDigits.value;
   if (digits.length !== 8) {
@@ -610,7 +594,6 @@ async function onCalcularFrete() {
     return;
   }
 
-  // Salva o CEP no store
   cartStore.setCep(cep.value);
 
   produto.to_postal_code = digits;
@@ -620,7 +603,6 @@ async function onCalcularFrete() {
     const resp = await calcularFrete(produto);
     freteResp.value = Array.isArray(resp) ? resp : [];
 
-    // Salva as opções de frete no store
     cartStore.setShippingOptions(freteResp.value);
   } catch (err) {
     console.error("Erro ao calcular frete:", err);
@@ -632,7 +614,6 @@ async function onCalcularFrete() {
   }
 }
 
-// Normaliza as formas de envio (filtra SEDEX/PAC e cria IDs estáveis)
 const shippingOptions = computed(() => {
   if (!Array.isArray(freteResp.value)) return [];
   return freteResp.value
@@ -640,7 +621,6 @@ const shippingOptions = computed(() => {
     .map((f, idx) => {
       const priceNum = toNumberFlexible(f.price);
 
-      // Calcula data prevista
       const date = new Date();
       date.setDate(date.getDate() + Number(f.delivery_time || 0));
       const estimatedDate = date.toLocaleDateString("pt-BR", {
@@ -652,21 +632,19 @@ const shippingOptions = computed(() => {
         id: f.id ?? `${f.name}-${idx}`,
         name: f.name,
         price: priceNum,
-        delivery_time: f.delivery_time, // número em dias
-        estimatedDate, // string formatada
+        delivery_time: f.delivery_time,
+        estimatedDate,
         error: !!f.error,
       };
     })
     .filter((f) => !f.error);
 });
 
-// Objeto/valor do frete selecionado
 const shippingSelected = computed(() => cartStore.shippingSelected);
 const shippingPrice = computed(() =>
   shippingSelected.value ? shippingSelected.value.price : 0
 );
 
-// Totais
 const GIFT_THRESHOLD = 200;
 const progressPercent = computed(() => {
   const p = Math.min(
@@ -687,7 +665,6 @@ const totalWithFreight = computed(() => {
   return isNaN(total) ? 0 : total;
 });
 
-// UX: ESC fecha carrinho + overflow body
 function onKey(e) {
   if (e.key === "Escape") cartStore.closeCart();
 }
@@ -699,13 +676,9 @@ watch(
   }
 );
 
-// Se o CEP mudar de fato, limpamos seleção e resultados quando ficar inválido
 watch(cepDigits, (d) => {
   if (d.length !== 8) {
     cartStore.setShippingSelected(null);
-    // Não zeramos freteResp imediatamente para permitir o usuário corrigir 1 dígito sem perder as opções,
-    // mas se preferir limpar, descomente a linha abaixo:
-    // freteResp.value = [];
   }
 });
 

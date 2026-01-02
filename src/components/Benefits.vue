@@ -2,7 +2,6 @@
   <section
     class="w-full bg-gradient-to-br from-[#735e59] to-[#b9a994] relative overflow-hidden"
   >
-    <!-- Elementos decorativos de fundo -->
     <div class="absolute inset-0 opacity-10">
       <div
         class="absolute top-0 left-1/4 w-32 h-32 bg-[#ede5dd] rounded-full blur-2xl"
@@ -15,7 +14,6 @@
       ></div>
     </div>
 
-    <!-- Padrão geométrico sutil -->
     <div class="absolute inset-0 opacity-5">
       <div
         class="absolute inset-0"
@@ -32,13 +30,11 @@
 
     <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8 relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-        <!-- Benefício 1: Prata 925 -->
         <div
-          class="group text-center transform transition-all duration-700 hover:-translate-y-2 animate-fade-in-up"
+          class="group text-center transform transition-all duration-700 hover:-translate-y-2 animate-fade-in-up cursor-pointer"
           style="animation-delay: 100ms"
         >
           <div class="relative">
-            <!-- Ícone com efeitos -->
             <div
               class="relative inline-flex items-center justify-center w-16 h-16 mb-4 mx-auto"
             >
@@ -52,13 +48,11 @@
                   class="fa-solid fa-gem text-lg text-[#735e59] group-hover:rotate-12 transition-transform duration-500"
                 ></i>
               </div>
-              <!-- Anel de pulsação -->
               <div
                 class="absolute inset-0 rounded-full border-2 border-[#ede5dd]/30 animate-ping group-hover:border-[#ede5dd]/50"
               ></div>
             </div>
 
-            <!-- Conteúdo -->
             <div class="space-y-2">
               <h3
                 class="text-lg lg:text-xl font-bold text-[#ede5dd] font-['Prata',serif] tracking-wide group-hover:text-white transition-colors duration-300"
@@ -72,7 +66,6 @@
               </p>
             </div>
 
-            <!-- Linha decorativa -->
             <div class="mt-4 flex justify-center">
               <div
                 class="w-12 h-0.5 bg-gradient-to-r from-transparent via-[#ede5dd]/50 to-transparent group-hover:w-20 group-hover:via-[#ede5dd] transition-all duration-500"
@@ -81,13 +74,11 @@
           </div>
         </div>
 
-        <!-- Benefício 2: Experiência -->
         <div
           class="group text-center transform transition-all duration-700 hover:-translate-y-2 animate-fade-in-up"
           style="animation-delay: 300ms"
         >
           <div class="relative">
-            <!-- Ícone com efeitos -->
             <div
               class="relative inline-flex items-center justify-center w-16 h-16 mb-4 mx-auto"
             >
@@ -101,14 +92,12 @@
                   class="fa-solid fa-star text-lg text-[#735e59] group-hover:scale-125 transition-transform duration-500"
                 ></i>
               </div>
-              <!-- Anel de pulsação -->
               <div
                 class="absolute inset-0 rounded-full border-2 border-[#ede5dd]/30 animate-ping group-hover:border-[#ede5dd]/50"
                 style="animation-delay: 0.5s"
               ></div>
             </div>
 
-            <!-- Conteúdo -->
             <div class="space-y-2">
               <h3
                 class="text-lg lg:text-xl font-bold text-[#ede5dd] font-['Prata',serif] tracking-wide group-hover:text-white transition-colors duration-300"
@@ -122,7 +111,6 @@
               </p>
             </div>
 
-            <!-- Linha decorativa -->
             <div class="mt-4 flex justify-center">
               <div
                 class="w-12 h-0.5 bg-gradient-to-r from-transparent via-[#ede5dd]/50 to-transparent group-hover:w-20 group-hover:via-[#ede5dd] transition-all duration-500"
@@ -131,13 +119,11 @@
           </div>
         </div>
 
-        <!-- Benefício 3: Envio -->
         <div
           class="group text-center transform transition-all duration-700 hover:-translate-y-2 animate-fade-in-up"
           style="animation-delay: 500ms"
         >
           <div class="relative">
-            <!-- Ícone com efeitos -->
             <div
               class="relative inline-flex items-center justify-center w-16 h-16 mb-4 mx-auto"
             >
@@ -151,14 +137,12 @@
                   class="fa-solid fa-shipping-fast text-lg text-[#735e59] group-hover:translate-x-1 transition-transform duration-500"
                 ></i>
               </div>
-              <!-- Anel de pulsação -->
               <div
                 class="absolute inset-0 rounded-full border-2 border-[#ede5dd]/30 animate-ping group-hover:border-[#ede5dd]/50"
                 style="animation-delay: 1s"
               ></div>
             </div>
 
-            <!-- Conteúdo -->
             <div class="space-y-2">
               <h3
                 class="text-lg lg:text-xl font-bold text-[#ede5dd] font-['Prata',serif] tracking-wide group-hover:text-white transition-colors duration-300"
@@ -172,7 +156,6 @@
               </p>
             </div>
 
-            <!-- Linha decorativa -->
             <div class="mt-4 flex justify-center">
               <div
                 class="w-12 h-0.5 bg-gradient-to-r from-transparent via-[#ede5dd]/50 to-transparent group-hover:w-20 group-hover:via-[#ede5dd] transition-all duration-500"
@@ -186,7 +169,6 @@
 </template>
 
 <style scoped>
-/* Animação de fade-in com movimento para cima */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -202,7 +184,6 @@
   animation: fade-in-up 0.8s ease-out forwards;
 }
 
-/* Animação de pulsação personalizada */
 @keyframes pulse-soft {
   0%,
   100% {
@@ -219,7 +200,6 @@
   animation: pulse-soft 2s ease-in-out infinite;
 }
 
-/* Animação de ping personalizada */
 @keyframes ping-custom {
   75%,
   100% {
@@ -232,7 +212,6 @@
   animation: ping-custom 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-/* Efeito de hover nos ícones */
 .group:hover .fa-gem {
   animation: gem-sparkle 0.6s ease-in-out;
 }
@@ -280,7 +259,6 @@
   }
 }
 
-/* Melhorias responsivas */
 @media (max-width: 768px) {
   .text-lg {
     font-size: 1rem;
@@ -311,7 +289,6 @@
   }
 }
 
-/* Efeito de hover específico para dispositivos touch */
 @media (hover: none) {
   .group:active {
     transform: scale(0.98);
@@ -322,7 +299,6 @@
   }
 }
 
-/* Animação adicional para o background pattern */
 @keyframes pattern-float {
   0%,
   100% {

@@ -1,6 +1,6 @@
 import { reactive, watch } from "vue";
 
-const STORAGE_KEY = "cart:data:v1"; // troquei nome para deixar claro que guarda mais do que items
+const STORAGE_KEY = "cart:data:v1";
 
 function loadFromStorage() {
   try {
@@ -14,7 +14,6 @@ function loadFromStorage() {
       };
     const obj = JSON.parse(raw);
 
-    // garante que tem estrutura mínima
     if (typeof obj !== "object" || obj === null)
       return {
         items: [],
@@ -23,7 +22,6 @@ function loadFromStorage() {
         shippingOptions: [],
       };
 
-    // normaliza itens
     const items = Array.isArray(obj.items)
       ? obj.items.map((i) => ({
           key: i.key ?? i.id ?? i.title,
@@ -205,17 +203,14 @@ export const cartStore = reactive({
     } catch {}
   },
 
-  // Setter para CEP
   setCep(cep) {
     this.cep = cep;
   },
 
-  // Setter para objeto shipping completo
   setShippingSelected(shipping) {
     this.shippingSelected = shipping;
   },
 
-  // Setter para opções de frete
   setShippingOptions(options) {
     this.shippingOptions = options;
   },
@@ -228,7 +223,6 @@ export const cartStore = reactive({
   },
 });
 
-// 🔄 salva sempre que items, cep, shippingSelected ou shippingOptions mudar
 watch(
   () => ({
     items: cartStore.items.map((i) => ({

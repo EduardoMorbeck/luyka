@@ -17,7 +17,6 @@ class FreteResponse(BaseModel):
     fretes: List[FreteItem] = Field(default_factory=list)
 
 class FreteQuery(BaseModel):
-    # Opcional: útil se quiser aceitar POST JSON; no nosso GET vamos usar Query params
     nCdServico: str
     sCepOrigem: str
     sCepDestino: str
@@ -34,10 +33,10 @@ class FreteQuery(BaseModel):
 class ProdutoBase(BaseModel):
     nome: str = Field(..., max_length=150)
     descricao: Optional[str] = None
-    preco: condecimal(max_digits=10, decimal_places=2) # type: ignore
+    preco: condecimal(max_digits=10, decimal_places=2) 
     estoque: int = 0
     categoria: Optional[str] = None
-    imagem_path: Optional[List[str]] = None  # Array de strings para múltiplas imagens
+    imagem_path: Optional[List[str]] = None
 
 class ProdutoCreate(ProdutoBase):
     pass
@@ -45,18 +44,18 @@ class ProdutoCreate(ProdutoBase):
 class ProdutoUpdate(BaseModel):
     nome: Optional[str] = Field(None, max_length=150)
     descricao: Optional[str] = None
-    preco: Optional[condecimal(max_digits=10, decimal_places=2)] = None # type: ignore
+    preco: Optional[condecimal(max_digits=10, decimal_places=2)] = None 
     estoque: Optional[int] = None
     categoria: Optional[str] = None
-    imagem_path: Optional[List[str]] = None  # Array de strings para múltiplas imagens
+    imagem_path: Optional[List[str]] = None
 
 class ProdutoOut(ProdutoBase):
     id: int
     criado_em: datetime
     atualizado_em: datetime
-    imagem_url: Optional[str] = None   # URL pronta pra exibição (pública ou assinada) - primeira imagem
-    imagens_url: Optional[List[str]] = None  # URLs de todas as imagens
-    imagem_path: Optional[List[str]] = None  # Array de strings para múltiplas imagens
+    imagem_url: Optional[str] = None
+    imagens_url: Optional[List[str]] = None
+    imagem_path: Optional[List[str]] = None
 
     class Config:
         from_attributes = True

@@ -3,9 +3,10 @@
     class="min-h-screen bg-gradient-to-br from-[#ede5dd] via-white to-[#b9a994] py-28 px-4"
   >
     <div class="max-w-4xl mx-auto">
-      <!-- Header com título e breadcrumb -->
-      <div class="text-center mb-12">
-        <div class="inline-flex items-center gap-2 text-sm text-[#423734] mb-3">
+      <div class="text-center mb-6 sm:mb-8 md:mb-12">
+        <div
+          class="inline-flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-[#423734] mb-2 sm:mb-3 flex-wrap justify-center"
+        >
           <span
             @click="voltarParaCarrinho"
             class="hover:text-[#735e59] cursor-pointer transition-colors"
@@ -51,26 +52,28 @@
           </span>
         </div>
         <h1
-          class="text-4xl font-bold bg-gradient-to-r from-[#735e59] to-[#b9a994] bg-clip-text text-transparent"
+          class="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#735e59] to-[#b9a994] bg-clip-text text-transparent"
         >
           Dados de Entrega
         </h1>
-        <p class="text-[#423734] mt-2">
+        <p class="text-[#423734] mt-2 text-sm sm:text-base">
           Preencha suas informações para receber seu pedido
         </p>
       </div>
 
-      <form @submit.prevent="submitForm" class="space-y-8">
-        <!-- Seção de Endereço -->
+      <form
+        @submit.prevent="submitForm"
+        class="space-y-4 sm:space-y-6 md:space-y-8"
+      >
         <section
-          class="bg-white rounded-2xl shadow-lg border border-[#ede5dd] p-8 hover:shadow-xl transition-all duration-300"
+          class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#ede5dd] p-4 sm:p-6 md:p-8 hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
-          <header class="mb-6 flex items-center gap-3">
+          <header class="mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
             <div
-              class="w-10 h-10 bg-[#ede5dd] rounded-full flex items-center justify-center"
+              class="w-8 h-8 sm:w-10 sm:h-10 bg-[#ede5dd] rounded-full flex items-center justify-center flex-shrink-0"
             >
               <svg
-                class="w-5 h-5 text-[#735e59]"
+                class="w-4 h-4 sm:w-5 sm:h-5 text-[#735e59]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -90,30 +93,29 @@
               </svg>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-[#232121]">
+              <h2 class="text-lg sm:text-xl font-bold text-[#232121]">
                 Endereço de Entrega
               </h2>
-              <p class="text-[#423734]">
+              <p class="text-[#423734] text-sm sm:text-base">
                 Informe onde deseja receber seu pedido
               </p>
             </div>
           </header>
 
-          <div class="space-y-6">
-            <!-- CEP e Busca -->
+          <div class="space-y-4 sm:space-y-6">
             <div class="space-y-3">
               <label
                 class="block text-sm font-medium text-[#423734] uppercase tracking-wide"
               >
                 CEP *
               </label>
-              <div class="flex gap-3">
+              <div class="flex gap-2 sm:gap-3">
                 <input
                   v-model="form.cep"
                   @input="onCepInput"
                   @keypress="searchCep"
                   placeholder="00000-000"
-                  class="flex-1 px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                  class="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                   :class="{
                     'border-red-500 focus:border-red-500 focus:ring-red-200':
                       cepErro,
@@ -124,10 +126,10 @@
                 <button
                   @click="searchCep"
                   type="button"
-                  class="px-6 py-3 bg-gradient-to-r from-[#735e59] to-[#b9a994] text-white font-semibold rounded-xl hover:from-[#b9a994] hover:to-[#735e59] focus:outline-none focus:ring-4 focus:ring-[#ede5dd] transition-all duration-200 transform hover:scale-105"
+                  class="px-3 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#735e59] to-[#b9a994] text-white font-semibold rounded-lg sm:rounded-xl hover:from-[#b9a994] hover:to-[#735e59] focus:outline-none focus:ring-4 focus:ring-[#ede5dd] transition-all duration-200 transform hover:scale-105 cursor-pointer text-sm sm:text-base"
                 >
                   <svg
-                    class="w-4 h-4 inline mr-2"
+                    class="w-4 h-4 inline sm:mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -139,7 +141,7 @@
                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     ></path>
                   </svg>
-                  Buscar
+                  <span class="hidden sm:inline">Buscar</span>
                 </button>
               </div>
               <div class="text-sm">
@@ -190,18 +192,17 @@
               </div>
             </div>
 
-            <!-- Rua e Número -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <div class="sm:col-span-2">
                 <label
-                  class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                  class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
                 >
                   Rua *
                 </label>
                 <input
                   v-model="form.rua"
                   placeholder="Nome da rua"
-                  class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                  class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                   :class="{
                     'border-red-500 focus:border-red-500 focus:ring-red-200':
                       inputsErro && !form.rua,
@@ -210,14 +211,14 @@
               </div>
               <div>
                 <label
-                  class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                  class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
                 >
                   Número *
                 </label>
                 <input
                   v-model="form.numero"
                   placeholder="Nº"
-                  class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                  class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                   :class="{
                     'border-red-500 focus:border-red-500 focus:ring-red-200':
                       inputsErro && !form.numero,
@@ -226,31 +227,29 @@
               </div>
             </div>
 
-            <!-- Complemento -->
             <div>
               <label
-                class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
               >
                 Complemento
               </label>
               <input
                 v-model="form.complemento"
                 placeholder="Apartamento, bloco, etc. (opcional)"
-                class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
               />
             </div>
 
-            <!-- Bairro -->
             <div>
               <label
-                class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
               >
                 Bairro *
               </label>
               <input
                 v-model="form.bairro"
                 placeholder="Nome do bairro"
-                class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                 :class="{
                   'border-red-500 focus:border-red-500 focus:ring-red-200':
                     inputsErro && !form.bairro,
@@ -258,18 +257,17 @@
               />
             </div>
 
-            <!-- Cidade e Estado -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label
-                  class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                  class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
                 >
                   Cidade *
                 </label>
                 <input
                   v-model="form.cidade"
                   placeholder="Nome da cidade"
-                  class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                  class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                   :class="{
                     'border-red-500 focus:border-red-500 focus:ring-red-200':
                       inputsErro && !form.cidade,
@@ -278,14 +276,14 @@
               </div>
               <div>
                 <label
-                  class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                  class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
                 >
                   Estado *
                 </label>
                 <input
                   v-model="form.estado"
                   placeholder="UF"
-                  class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                  class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                   :class="{
                     'border-red-500 focus:border-red-500 focus:ring-red-200':
                       inputsErro && !form.estado,
@@ -294,10 +292,9 @@
               </div>
             </div>
 
-            <!-- Observações -->
             <div>
               <label
-                class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
               >
                 Observações
               </label>
@@ -305,22 +302,21 @@
                 v-model="form.obs"
                 placeholder="Instruções especiais para entrega (opcional)"
                 rows="3"
-                class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all resize-none"
+                class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all resize-none text-sm sm:text-base"
               ></textarea>
             </div>
           </div>
         </section>
 
-        <!-- Seção de Cálculo de Frete -->
         <section
-          class="bg-white rounded-2xl shadow-lg border border-[#ede5dd] p-8 hover:shadow-xl transition-all duration-300"
+          class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#ede5dd] p-4 sm:p-6 md:p-8 hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
-          <header class="mb-6 flex items-center gap-3">
+          <header class="mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
             <div
-              class="w-10 h-10 bg-[#ede5dd] rounded-full flex items-center justify-center"
+              class="w-8 h-8 sm:w-10 sm:h-10 bg-[#ede5dd] rounded-full flex items-center justify-center flex-shrink-0"
             >
               <svg
-                class="w-5 h-5 text-[#735e59]"
+                class="w-4 h-4 sm:w-5 sm:h-5 text-[#735e59]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -334,14 +330,16 @@
               </svg>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-[#232121]">Cálculo de Frete</h2>
-              <p class="text-[#423734]">
+              <h2 class="text-lg sm:text-xl font-bold text-[#232121]">
+                Cálculo de Frete
+              </h2>
+              <p class="text-[#423734] text-sm sm:text-base">
                 Escolha a forma de envio para seu pedido
               </p>
             </div>
           </header>
 
-          <div class="space-y-6">
+          <div class="space-y-4 sm:space-y-6">
             <p
               v-if="freteError"
               class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 flex items-center gap-2"
@@ -363,21 +361,25 @@
               {{ freteError }}
             </p>
 
-            <!-- Formas de Envio -->
-            <fieldset v-if="shippingOptions.length" class="space-y-4">
-              <legend class="text-lg font-semibold text-[#232121] mb-4">
+            <fieldset
+              v-if="shippingOptions.length"
+              class="space-y-3 sm:space-y-4"
+            >
+              <legend
+                class="text-base sm:text-lg font-semibold text-[#232121] mb-3 sm:mb-4"
+              >
                 Formas de Envio Disponíveis
               </legend>
 
               <div
-                class="space-y-3"
+                class="space-y-2 sm:space-y-3"
                 role="radiogroup"
                 aria-label="Formas de envio"
               >
                 <label
                   v-for="opt in shippingOptions"
                   :key="opt.id"
-                  class="flex items-start gap-4 p-4 rounded-xl bg-[#ede5dd] border-2 border-transparent hover:border-[#b9a994] cursor-pointer transition-all duration-200"
+                  class="flex items-start gap-2 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-[#ede5dd] border-2 border-transparent hover:border-[#b9a994] cursor-pointer transition-all duration-200"
                   :class="{
                     'border-[#735e59] bg-[#b9a994] bg-opacity-20':
                       cartStore.shippingSelected?.id === opt.id,
@@ -385,25 +387,29 @@
                 >
                   <input
                     type="radio"
-                    class="mt-1 w-4 h-4 text-[#735e59] border-[#b9a994] focus:ring-[#ede5dd]"
+                    class="mt-1 w-4 h-4 text-[#735e59] border-[#b9a994] focus:ring-[#ede5dd] flex-shrink-0"
                     name="shipping"
                     :value="opt.id"
                     :checked="cartStore.shippingSelected?.id === opt.id"
                     :aria-label="`Selecionar ${opt.name}`"
                     @change="cartStore.setShippingSelected(opt)"
                   />
-                  <div class="flex-1">
-                    <div class="flex items-center justify-between mb-2">
-                      <span class="font-semibold text-[#232121] text-lg">{{
-                        opt.name
-                      }}</span>
-                      <span class="font-bold text-[#735e59] text-xl">{{
-                        formatBRL(opt.price)
-                      }}</span>
+                  <div class="flex-1 min-w-0">
+                    <div
+                      class="flex items-center justify-between mb-1.5 sm:mb-2 gap-2"
+                    >
+                      <span
+                        class="font-semibold text-[#232121] text-base sm:text-lg"
+                        >{{ opt.name }}</span
+                      >
+                      <span
+                        class="font-bold text-[#735e59] text-lg sm:text-xl whitespace-nowrap"
+                        >{{ formatBRL(opt.price) }}</span
+                      >
                     </div>
                     <div class="flex items-center gap-2 text-[#423734]">
                       <svg
-                        class="w-4 h-4"
+                        class="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -415,7 +421,7 @@
                           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                         ></path>
                       </svg>
-                      <span class="text-sm"
+                      <span class="text-xs sm:text-sm"
                         >Entrega até dia {{ opt.estimatedDate }}</span
                       >
                     </div>
@@ -428,17 +434,18 @@
               </p>
             </fieldset>
 
-            <!-- Resumo de Valores -->
             <div
               v-if="cartStore.items.length > 0"
-              class="bg-gradient-to-r from-[#ede5dd] to-[#b9a994] rounded-xl p-6"
+              class="bg-gradient-to-r from-[#ede5dd] to-[#b9a994] rounded-lg sm:rounded-xl p-4 sm:p-6"
               role="status"
               aria-live="polite"
             >
-              <h3 class="font-bold text-[#735e59] mb-4 text-lg">
+              <h3
+                class="font-bold text-[#735e59] mb-3 sm:mb-4 text-base sm:text-lg"
+              >
                 Resumo do Pedido
               </h3>
-              <div class="space-y-3 text-sm">
+              <div class="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                 <div class="flex items-center justify-between">
                   <span class="text-[#423734]">Subtotal (sem frete)</span>
                   <span class="font-semibold text-[#232121]">{{
@@ -457,10 +464,10 @@
                   }}</span>
                 </div>
                 <div
-                  class="pt-3 border-t border-[#b9a994] flex items-center justify-between text-lg font-bold"
+                  class="pt-2 sm:pt-3 border-t border-[#b9a994] flex items-center justify-between text-base sm:text-lg font-bold"
                 >
                   <span class="text-[#735e59]">Total</span>
-                  <span class="text-2xl text-[#735e59]">{{
+                  <span class="text-xl sm:text-2xl text-[#735e59]">{{
                     formatBRL(totalWithFreight)
                   }}</span>
                 </div>
@@ -469,16 +476,15 @@
           </div>
         </section>
 
-        <!-- Seção de Dados Pessoais -->
         <section
-          class="bg-white rounded-2xl shadow-lg border border-[#ede5dd] p-8 hover:shadow-xl transition-all duration-300"
+          class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#ede5dd] p-4 sm:p-6 md:p-8 hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
-          <header class="mb-6 flex items-center gap-3">
+          <header class="mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
             <div
-              class="w-10 h-10 bg-[#ede5dd] rounded-full flex items-center justify-center"
+              class="w-8 h-8 sm:w-10 sm:h-10 bg-[#ede5dd] rounded-full flex items-center justify-center flex-shrink-0"
             >
               <svg
-                class="w-5 h-5 text-[#735e59]"
+                class="w-4 h-4 sm:w-5 sm:h-5 text-[#735e59]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -492,25 +498,27 @@
               </svg>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-[#232121]">
+              <h2 class="text-lg sm:text-xl font-bold text-[#232121]">
                 Dados para Entrega
               </h2>
-              <p class="text-[#423734]">Informações de contato para entrega</p>
+              <p class="text-[#423734] text-sm sm:text-base">
+                Informações de contato para entrega
+              </p>
             </div>
           </header>
 
-          <div class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-4 sm:space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label
-                  class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                  class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
                 >
                   Nome *
                 </label>
                 <input
                   v-model="form.nome"
                   placeholder="Seu nome"
-                  class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                  class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                   :class="{
                     'border-red-500 focus:border-red-500 focus:ring-red-200':
                       inputsErro && !form.nome,
@@ -520,14 +528,14 @@
               </div>
               <div>
                 <label
-                  class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                  class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
                 >
                   Sobrenome
                 </label>
                 <input
                   v-model="form.sobrenome"
                   placeholder="Seu sobrenome"
-                  class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                  class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                   autocomplete="on"
                 />
               </div>
@@ -535,7 +543,7 @@
 
             <div>
               <label
-                class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+                class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
               >
                 Telefone com DDD *
               </label>
@@ -544,7 +552,7 @@
                 @input="onTelefoneInput"
                 @blur="validarTelefone"
                 placeholder="(00) 00000-0000"
-                class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+                class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
                 :class="{
                   'border-red-500 focus:border-red-500 focus:ring-red-200':
                     telefoneErro,
@@ -576,16 +584,15 @@
           </div>
         </section>
 
-        <!-- Seção de Dados Fiscais -->
         <section
-          class="bg-white rounded-2xl shadow-lg border border-[#ede5dd] p-8 hover:shadow-xl transition-all duration-300"
+          class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#ede5dd] p-4 sm:p-6 md:p-8 hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
-          <header class="mb-6 flex items-center gap-3">
+          <header class="mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
             <div
-              class="w-10 h-10 bg-[#ede5dd] rounded-full flex items-center justify-center"
+              class="w-8 h-8 sm:w-10 sm:h-10 bg-[#ede5dd] rounded-full flex items-center justify-center flex-shrink-0"
             >
               <svg
-                class="w-5 h-5 text-[#735e59]"
+                class="w-4 h-4 sm:w-5 sm:h-5 text-[#735e59]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -599,16 +606,18 @@
               </svg>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-[#232121]">
+              <h2 class="text-lg sm:text-xl font-bold text-[#232121]">
                 Dados para Nota Fiscal
               </h2>
-              <p class="text-[#423734]">CPF ou CNPJ para emissão da nota</p>
+              <p class="text-[#423734] text-sm sm:text-base">
+                CPF ou CNPJ para emissão da nota
+              </p>
             </div>
           </header>
 
           <div>
             <label
-              class="block text-sm font-medium text-[#423734] uppercase tracking-wide mb-2"
+              class="block text-xs sm:text-sm font-medium text-[#423734] uppercase tracking-wide mb-1.5 sm:mb-2"
             >
               CPF/CNPJ *
             </label>
@@ -617,7 +626,7 @@
               @input="onCpfCnpjInput"
               @blur="validarCpfCnpj"
               placeholder="000.000.000-00 ou 00.000.000/0000-00"
-              class="w-full px-4 py-3 border-2 border-[#ede5dd] rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all"
+              class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-[#ede5dd] rounded-lg sm:rounded-xl bg-white text-[#232121] placeholder-[#b9a994] focus:border-[#735e59] focus:ring-2 focus:ring-[#ede5dd] transition-all text-sm sm:text-base"
               :class="{
                 'border-red-500 focus:border-red-500 focus:ring-red-200':
                   cpfCnpjErro,
@@ -648,18 +657,17 @@
           </div>
         </section>
 
-        <!-- Botão de Submissão -->
         <section
-          class="bg-white rounded-2xl shadow-lg border border-[#ede5dd] p-8 hover:shadow-xl transition-all duration-300"
+          class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-[#ede5dd] p-4 sm:p-6 md:p-8 hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
           <div class="text-center">
             <button
               type="submit"
-              class="w-full px-12 py-4 text-xl bg-gradient-to-r from-[#735e59] to-[#b9a994] text-white font-bold rounded-2xl shadow-lg hover:from-[#b9a994] hover:to-[#735e59] focus:outline-none focus:ring-4 focus:ring-[#ede5dd] transform hover:scale-105 transition-all duration-200"
+              class="w-full px-6 sm:px-12 py-3 sm:py-4 text-base sm:text-lg md:text-xl bg-gradient-to-r from-[#735e59] to-[#b9a994] text-white font-bold rounded-xl sm:rounded-2xl shadow-lg hover:from-[#b9a994] hover:to-[#735e59] focus:outline-none focus:ring-4 focus:ring-[#ede5dd] transform hover:scale-105 transition-all duration-200 cursor-pointer"
             >
-              <div class="flex items-center justify-center gap-3">
+              <div class="flex items-center justify-center gap-2 sm:gap-3">
                 <svg
-                  class="w-6 h-6"
+                  class="w-5 h-5 sm:w-6 sm:h-6"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -713,19 +721,15 @@ onMounted(() => {
     const dados = JSON.parse(salvo);
     Object.assign(form, dados);
 
-    // Se temos um CEP salvo, busca o endereço automaticamente
     if (dados.cep && dados.cep.replace(/\D/g, "").length === 8) {
-      // Aguarda um pouco para garantir que o form foi preenchido
       setTimeout(() => {
         searchCep();
       }, 100);
     }
   }
 
-  // Carrega o CEP do cartStore se existir
   if (cartStore.cep) {
     form.cep = cartStore.cep;
-    // Se o CEP do cartStore tem 8 dígitos, busca o endereço
     if (cartStore.cep.replace(/\D/g, "").length === 8) {
       setTimeout(() => {
         searchCep();
@@ -733,7 +737,6 @@ onMounted(() => {
     }
   }
 
-  // Se já temos opções de frete salvas, usamos elas
   if (cartStore.shippingOptions.length > 0) {
     freteResp.value = cartStore.shippingOptions;
   }
@@ -756,12 +759,10 @@ const form = reactive({
   obs: "",
 });
 
-// Variáveis para cálculo de frete
 const isCalculating = ref(false);
 const freteResp = ref([]);
 const freteError = ref("");
 
-// Dados do produto para cálculo de frete
 const produto = {
   from_postal_code: "95088325",
   to_postal_code: "",
@@ -771,19 +772,16 @@ const produto = {
   weight: 0.3,
 };
 
-// Helpers
 const formatBRL = (n) =>
   (Number(n) || 0).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
-// Converte string de preço com . ou , (em qualquer combinação) para Number
 function toNumberFlexible(input) {
   if (typeof input === "number") return input;
   let s = String(input || "").trim();
 
-  // remove símbolos e espaços (R$, $, etc.)
   s = s.replace(/[^\d.,-]/g, "");
   if (!s) return 0;
 
@@ -791,17 +789,14 @@ function toNumberFlexible(input) {
   const hasDot = s.includes(".");
 
   if (hasComma && hasDot) {
-    // Assume que o último separador (direita) é o decimal
     const lastSepIdx = Math.max(s.lastIndexOf(","), s.lastIndexOf("."));
     const intPart = s.slice(0, lastSepIdx).replace(/[.,]/g, "");
     const fracPart = s.slice(lastSepIdx + 1);
     s = `${intPart}.${fracPart}`;
   } else if (hasComma && !hasDot) {
-    // Vírgula como decimal
-    s = s.replace(/\./g, ""); // milhares (se houver)
+    s = s.replace(/\./g, "");
     s = s.replace(",", ".");
   } else {
-    // Ponto como decimal; remove vírgulas de milhares
     s = s.replace(/,/g, "");
   }
 
@@ -809,10 +804,9 @@ function toNumberFlexible(input) {
   return isNaN(n) ? 0 : n;
 }
 
-// Cálculo de frete
 async function onCalcularFrete() {
   freteError.value = "";
-  cartStore.setShippingSelected(null); // limpa seleção ao recalcular
+  cartStore.setShippingSelected(null);
 
   const digits = form.cep.replace(/\D/g, "");
   if (digits.length !== 8) {
@@ -820,7 +814,6 @@ async function onCalcularFrete() {
     return;
   }
 
-  // Salva o CEP no store
   cartStore.setCep(form.cep);
 
   produto.to_postal_code = digits;
@@ -830,7 +823,6 @@ async function onCalcularFrete() {
     const resp = await calcularFrete(produto);
     freteResp.value = Array.isArray(resp) ? resp : [];
 
-    // Salva as opções de frete no store
     cartStore.setShippingOptions(freteResp.value);
   } catch (err) {
     console.error("Erro ao calcular frete:", err);
@@ -842,7 +834,6 @@ async function onCalcularFrete() {
   }
 }
 
-// Normaliza as formas de envio (filtra SEDEX/PAC e cria IDs estáveis)
 const shippingOptions = computed(() => {
   if (!Array.isArray(freteResp.value)) return [];
   return freteResp.value
@@ -850,7 +841,6 @@ const shippingOptions = computed(() => {
     .map((f, idx) => {
       const priceNum = toNumberFlexible(f.price);
 
-      // Calcula data prevista
       const date = new Date();
       date.setDate(date.getDate() + Number(f.delivery_time || 0));
       const estimatedDate = date.toLocaleDateString("pt-BR", {
@@ -862,21 +852,19 @@ const shippingOptions = computed(() => {
         id: f.id ?? `${f.name}-${idx}`,
         name: f.name,
         price: priceNum,
-        delivery_time: f.delivery_time, // número em dias
-        estimatedDate, // string formatada
+        delivery_time: f.delivery_time,
+        estimatedDate,
         error: !!f.error,
       };
     })
     .filter((f) => !f.error);
 });
 
-// Objeto/valor do frete selecionado
 const shippingSelected = computed(() => cartStore.shippingSelected);
 const shippingPrice = computed(() =>
   shippingSelected.value ? shippingSelected.value.price : 0
 );
 
-// Total com frete
 const totalWithFreight = computed(() => {
   const total =
     Number(cartStore.subtotal || 0) + Number(shippingPrice.value || 0);
@@ -1010,7 +998,6 @@ function onCepInput(e) {
   form.cep = aplicarMascaraCep(e.target.value);
   cepErro.value = "";
 
-  // Chama automaticamente o cálculo de frete quando o CEP tem 8 dígitos
   const digits = form.cep.replace(/\D/g, "");
   if (digits.length === 8) {
     onCalcularFrete();
@@ -1074,12 +1061,10 @@ function validarCpfCnpj() {
 }
 
 function voltarParaCarrinho() {
-  // Volta para a página inicial e abre o carrinho
   cartStore.openCart();
   router.push("/");
 }
 
-// Computed para verificar se todos os campos obrigatórios estão preenchidos
 const todosObrigatoriosPreenchidos = computed(() => {
   const camposObrigatorios = [
     "nome",
@@ -1093,19 +1078,15 @@ const todosObrigatoriosPreenchidos = computed(() => {
     "cpfCnpj",
   ];
 
-  // Verifica se todos os campos obrigatórios estão preenchidos
   const todosCamposPreenchidos = camposObrigatorios.every(
     (campo) => String(form[campo] || "").trim().length > 0
   );
 
-  // Verifica se CEP é válido
   const cepLimpo = limparCep(form.cep);
   const cepValido = isCepValido(cepLimpo);
 
-  // Verifica se telefone é válido
   const telefoneValido = isTelefoneValido(form.telefone);
 
-  // Verifica se CPF/CNPJ é válido
   const cpfCnpjValido = isCpfCnpjValido(form.cpfCnpj);
 
   return todosCamposPreenchidos && cepValido && telefoneValido && cpfCnpjValido;
@@ -1119,7 +1100,6 @@ function irParaPagamento() {
     return;
   }
 
-  // Salva os dados antes de ir para pagamento
   localStorage.setItem("formEntrega", JSON.stringify(form));
   router.push("/pagamento");
 }

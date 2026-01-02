@@ -1,4 +1,3 @@
-# services/images.py
 import re
 import os
 from io import BytesIO
@@ -65,17 +64,8 @@ def signed_url(path: str, expires: int = 3600) -> Optional[str]:
     return signed["signedURL"]
 
 def delete_image(path: str) -> bool:
-    """
-    Exclui uma imagem do Supabase Storage
-    
-    Args:
-        path: Caminho da imagem no storage
-        
-    Returns:
-        bool: True se a exclusão foi bem-sucedida, False caso contrário
-    """
     if not path:
-        return True  # Se não há path, considera como sucesso
+        return True
     
     try:
         supabase = _supabase()

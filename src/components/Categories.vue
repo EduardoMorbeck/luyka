@@ -2,7 +2,6 @@
   <section
     class="w-full py-16 bg-gradient-to-br from-[#f5f0ea] via-white to-[#ede5dd] relative overflow-hidden"
   >
-    <!-- Elementos decorativos de fundo -->
     <div class="absolute inset-0 opacity-8">
       <div
         class="absolute top-20 right-10 w-40 h-40 bg-[#735e59] rounded-full blur-3xl"
@@ -16,7 +15,6 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-      <!-- Título aprimorado -->
       <div class="text-center mb-16">
         <div class="inline-flex items-center justify-center mb-4">
           <div
@@ -31,7 +29,7 @@
         </div>
 
         <h2
-          class="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#735e59] via-[#b9a994] to-[#735e59] bg-clip-text text-transparent font-['Prata',serif] tracking-wider mb-4 transform transition-all duration-700 hover:scale-105"
+          class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-[#735e59] via-[#b9a994] to-[#735e59] bg-clip-text text-transparent font-['Prata',serif] tracking-wider mb-4 transform transition-all duration-700 hover:scale-105 cursor-pointer"
         >
           CATEGORIAS
         </h2>
@@ -42,7 +40,6 @@
         </p>
       </div>
 
-      <!-- Grid de categorias aprimorado -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <article
           v-for="(category, idx) in categories"
@@ -55,9 +52,7 @@
           tabindex="0"
           :aria-label="`Abrir categoria ${category.title}`"
         >
-          <!-- Imagem em destaque melhorada -->
           <figure class="relative aspect-[4/3] w-full overflow-hidden">
-            <!-- Overlay gradiente -->
             <div
               class="absolute inset-0 bg-gradient-to-t from-[#735e59]/20 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 z-10"
             ></div>
@@ -69,12 +64,10 @@
               loading="lazy"
             />
 
-            <!-- Efeito de brilho -->
             <div
               class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             ></div>
 
-            <!-- Faixa com o nome melhorada -->
             <div
               class="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 transform transition-all duration-500 group-hover:bottom-8 z-20"
             >
@@ -89,7 +82,6 @@
               </div>
             </div>
 
-            <!-- Ícone decorativo -->
             <div
               class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 z-20"
             >
@@ -99,19 +91,16 @@
             </div>
           </figure>
 
-          <!-- Efeito de border animado -->
           <div
             class="absolute inset-0 rounded-2xl ring-0 ring-[#735e59]/0 transition-all duration-500 group-hover:ring-2 group-hover:ring-[#735e59]/30"
           ></div>
 
-          <!-- Shimmer effect -->
           <div
             class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
           ></div>
         </article>
       </div>
 
-      <!-- Texto informativo adicional -->
       <div class="text-center mt-12">
         <div
           class="inline-flex items-center space-x-3 text-sm text-[#735e59]/60"
@@ -130,9 +119,9 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const categories = [
-  { title: "Colar", img: "/1.jpeg" },
-  { title: "Anel", img: "/2.jpeg" },
-  { title: "Teste", img: "/3.jpeg" },
+  { title: "Anel", img: "/1.png" },
+  { title: "Colar", img: "/2.png" },
+  { title: "Conjunto", img: "/3.png" },
 ];
 
 function goToCategory(title) {
@@ -144,7 +133,6 @@ function goToCategory(title) {
 </script>
 
 <style scoped>
-/* Animação de fade-in com movimento para cima */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -160,7 +148,6 @@ function goToCategory(title) {
   animation: fade-in-up 0.8s ease-out forwards;
 }
 
-/* Animação de pulsação personalizada */
 @keyframes pulse-soft {
   0%,
   100% {
@@ -175,7 +162,6 @@ function goToCategory(title) {
   animation: pulse-soft 2s ease-in-out infinite;
 }
 
-/* Efeito shimmer personalizado */
 @keyframes shimmer {
   0% {
     transform: translateX(-100%) skewX(-12deg);
@@ -189,29 +175,18 @@ function goToCategory(title) {
   animation: shimmer 1s ease-out;
 }
 
-/* Melhorias responsivas */
 @media (max-width: 768px) {
-  .text-5xl {
-    font-size: 2.5rem;
-  }
-
-  .lg\:text-6xl {
-    font-size: 3rem;
-  }
-
   .group:hover {
     transform: translateY(-8px);
   }
 }
 
-/* Efeito de hover específico para dispositivos touch */
 @media (hover: none) {
   .group:active {
     transform: scale(0.98);
   }
 }
 
-/* Animação adicional para o ícone de layer-group */
 @keyframes float {
   0%,
   100% {

@@ -2,7 +2,6 @@
   <section
     class="w-full py-16 bg-gradient-to-br from-[#ede5dd] via-white to-[#f5f0ea] relative overflow-hidden"
   >
-    <!-- Elementos decorativos de fundo -->
     <div class="absolute inset-0 opacity-10">
       <div
         class="absolute top-10 left-10 w-32 h-32 bg-[#b9a994] rounded-full blur-3xl"
@@ -16,7 +15,6 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-      <!-- Título aprimorado -->
       <div class="text-center mb-16">
         <div class="inline-flex items-center justify-center mb-4">
           <div
@@ -31,7 +29,7 @@
         </div>
 
         <h2
-          class="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-[#735e59] via-[#b9a994] to-[#735e59] bg-clip-text text-transparent font-['Prata',serif] tracking-wider mb-4 transform transition-all duration-700 hover:scale-105"
+          class="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-[#735e59] via-[#b9a994] to-[#735e59] bg-clip-text text-transparent font-['Prata',serif] tracking-wider mb-4 transform transition-all duration-700 hover:scale-105 cursor-pointer"
         >
           DESTAQUES
         </h2>
@@ -42,28 +40,53 @@
         </p>
       </div>
 
-      <!-- Grid de produtos aprimorado -->
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16"
-      >
+      <div v-if="products.length > 0">
         <div
-          v-for="(product, idx) in products"
-          :key="idx"
-          class="transform transition-all duration-500 hover:-translate-y-2 animate-fade-in-up"
-          :style="{ animationDelay: `${idx * 150}ms` }"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16"
         >
-          <ProductCard :product="product" @open-modal="openProductModal" />
+          <div
+            v-for="(product, idx) in products"
+            :key="idx"
+            class="transform transition-all duration-500 hover:-translate-y-2 animate-fade-in-up cursor-pointer flex items-center justify-center"
+            :style="{ animationDelay: `${idx * 150}ms` }"
+          >
+            <ProductCard :product="product" @open-modal="openProductModal" />
+          </div>
         </div>
       </div>
 
-      <!-- Botão aprimorado -->
+      <div v-else class="text-center py-20 mb-16">
+        <div class="inline-flex flex-col items-center space-y-6">
+          <div
+            class="w-24 h-24 bg-gradient-to-br from-[#ede5dd] to-[#b9a994] rounded-full flex items-center justify-center"
+          >
+            <i class="fa-solid fa-box-open text-3xl text-[#735e59]"></i>
+          </div>
+          <div class="space-y-2">
+            <h3 class="text-2xl font-bold text-[#735e59] font-['Prata',serif]">
+              Nenhum produto cadastrado
+            </h3>
+            <p class="text-[#735e59]/70 max-w-md">
+              Ainda não há produtos cadastrados. Comece adicionando seu primeiro
+              produto!
+            </p>
+          </div>
+          <button
+            @click="goToCadastrarProdutos"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-[#735e59] text-white font-medium rounded-full hover:bg-[#5a4a46] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 cursor-pointer"
+          >
+            <i class="fa-solid fa-plus text-sm"></i>
+            Cadastrar Produtos
+          </button>
+        </div>
+      </div>
+
       <div class="text-center">
         <div class="inline-flex flex-col items-center space-y-4">
           <a
             href="/produtos"
-            class="group relative inline-flex items-center justify-center px-10 py-4 text-xl font-semibold text-[#735e59] bg-white border-3 border-[#735e59] rounded-full shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 hover:bg-[#735e59] hover:text-white overflow-hidden"
+            class="group relative inline-flex items-center justify-center px-10 py-4 text-xl font-semibold text-[#735e59] bg-white border-3 border-[#735e59] rounded-full shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 hover:bg-[#735e59] hover:text-white overflow-hidden cursor-pointer"
           >
-            <!-- Efeito de onda no hover -->
             <span
               class="absolute inset-0 bg-gradient-to-r from-[#735e59] via-[#b9a994] to-[#735e59] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
             ></span>
@@ -88,7 +111,6 @@
       </div>
     </div>
 
-    <!-- Modal do produto em tela cheia -->
     <div
       v-if="selectedProduct"
       class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
@@ -99,7 +121,7 @@
         @click.stop
       >
         <button
-          class="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#ede5dd] hover:bg-[#b9a994] transition-all duration-200 flex items-center justify-center group z-10"
+          class="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#ede5dd] hover:bg-[#b9a994] transition-all duration-200 flex items-center justify-center group z-10 cursor-pointer"
           @click="closeProductModal"
         >
           <i
@@ -108,44 +130,38 @@
         </button>
 
         <div class="flex flex-col lg:flex-row gap-6 h-full">
-          <!-- Imagem em tela cheia com navegação -->
           <div
             class="flex-1 flex items-center justify-center bg-gradient-to-br from-[#ede5dd] to-[#f5f0ea] rounded-xl p-4 relative"
           >
-            <!-- Imagem principal -->
             <img
               :src="currentImageUrl"
               alt="Produto"
               class="w-full h-screen max-h-[80vh] object-contain rounded-lg transition-all duration-300"
             />
 
-            <!-- Controles de navegação (apenas se houver múltiplas imagens) -->
             <div
               v-if="hasMultipleImages"
               class="absolute inset-0 flex items-center justify-between p-4"
             >
-              <!-- Botão anterior -->
               <button
                 v-if="currentImageIndex > 0"
                 @click="previousImage"
-                class="w-12 h-12 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
+                class="w-12 h-12 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-pointer"
               >
                 <i class="fa-solid fa-chevron-left text-[#735e59] text-xl"></i>
               </button>
               <div v-else class="w-12"></div>
 
-              <!-- Botão próximo -->
               <button
                 v-if="currentImageIndex < totalImages - 1"
                 @click="nextImage"
-                class="w-12 h-12 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
+                class="w-12 h-12 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-pointer"
               >
                 <i class="fa-solid fa-chevron-right text-[#735e59] text-xl"></i>
               </button>
               <div v-else class="w-12"></div>
             </div>
 
-            <!-- Indicadores de imagem -->
             <div
               v-if="hasMultipleImages"
               class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"
@@ -158,12 +174,11 @@
                 :class="
                   index === currentImageIndex
                     ? 'bg-[#735e59]'
-                    : 'bg-white bg-opacity-60 hover:bg-opacity-80'
+                    : 'bg-white bg-opacity-60 hover:bg-opacity-80 cursor-pointer'
                 "
               ></button>
             </div>
 
-            <!-- Contador de imagens -->
             <div
               v-if="hasMultipleImages"
               class="absolute top-4 left-4 bg-black bg-opacity-50 text-white text-sm px-3 py-1 rounded-full backdrop-blur-sm"
@@ -172,7 +187,6 @@
             </div>
           </div>
 
-          <!-- Informações do produto -->
           <div class="lg:w-80 flex flex-col justify-center space-y-6 p-4">
             <div class="text-center lg:text-left space-y-4">
               <h2
@@ -195,7 +209,7 @@
             <div class="flex justify-center lg:justify-start pt-4">
               <button
                 @click="addToCart"
-                class="w-full lg:w-auto px-12 py-4 bg-[#735e59] text-white text-lg font-medium rounded-full hover:bg-[#5a4a46] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                class="w-full lg:w-auto px-12 py-4 bg-[#735e59] text-white text-lg font-medium rounded-full hover:bg-[#5a4a46] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 cursor-pointer"
               >
                 Adicionar ao Carrinho
               </button>
@@ -209,9 +223,12 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { getProdutos } from "/src/api.js";
 import ProductCard from "./ProductCard.vue";
 import { cartStore } from "../store/cartStore";
+
+const router = useRouter();
 
 const products = ref([]);
 const selectedProduct = ref(null);
@@ -229,7 +246,7 @@ onMounted(() => {
 
 const openProductModal = (product) => {
   selectedProduct.value = product;
-  currentImageIndex.value = 0; // Reset para primeira imagem
+  currentImageIndex.value = 0;
 };
 
 const closeProductModal = () => {
@@ -300,10 +317,13 @@ const addToCart = () => {
     closeProductModal();
   }
 };
+
+const goToCadastrarProdutos = () => {
+  router.push("/cadastrar-produtos");
+};
 </script>
 
 <style scoped>
-/* Animação de fade-in com movimento para cima */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -319,7 +339,6 @@ const addToCart = () => {
   animation: fade-in-up 0.8s ease-out forwards;
 }
 
-/* Efeito de hover no botão com ondulação */
 .group:hover .absolute {
   animation: wave 0.6s ease-in-out;
 }
@@ -336,7 +355,6 @@ const addToCart = () => {
   }
 }
 
-/* Animação de pulsação personalizada */
 @keyframes pulse-soft {
   0%,
   100% {
@@ -349,16 +367,5 @@ const addToCart = () => {
 
 .animate-pulse {
   animation: pulse-soft 2s ease-in-out infinite;
-}
-
-/* Melhorias responsivas */
-@media (max-width: 768px) {
-  .text-5xl {
-    font-size: 2.5rem;
-  }
-
-  .lg\:text-6xl {
-    font-size: 3rem;
-  }
 }
 </style>

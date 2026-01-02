@@ -9,7 +9,6 @@
     />
     <i class="icon fa-solid fa-magnifying-glass"></i>
 
-    <!-- Painel de resultados -->
     <div v-if="open && q.length >= minChars" class="panel" @keydown.stop>
       <div v-if="loadingFirst" class="state muted">Buscando…</div>
 
@@ -37,88 +36,142 @@
           Nenhum resultado.
         </div>
 
-        <div v-if="loadingMore" class="state muted">Carregando mais…</div>
+        <div v-if="loadingMore" class="state muted">Carregando mais…        </div>
 
-        <!-- Sentinela do scroll infinito -->
         <div ref="sentinel" class="sentinel"></div>
       </template>
     </div>
 
-    <!-- Modal do produto -->
-    <div
-      v-if="showModal && selectedProduct"
-      class="modal-overlay"
-      @click="closeModal"
-    >
-      <div class="modal-content" @click.stop>
-        <button class="modal-close" @click="closeModal">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-
-        <div class="modal-image-wrapper">
-          <img
-            :src="selectedProduct.imagem_url || fallbackImg"
-            :alt="selectedProduct.nome"
-            class="modal-image"
-          />
-        </div>
-
-        <div class="modal-info">
-          <h2 class="modal-title">
-            {{ selectedProduct.nome }}
-          </h2>
-          <p class="modal-description">
-            {{ selectedProduct.descricao }}
-          </p>
-          <p class="modal-price">
-            {{ formatPrice(selectedProduct.preco ?? selectedProduct.valor) }}
-          </p>
-
+    <Teleport to="body">
+      <div
+        v-if="showModal && selectedProduct"
+        class="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
+        @click="closeModal"
+      >
+        <div
+          class="bg-white rounded-2xl shadow-2xl p-6 relative w-full max-w-6xl h-full max-h-[95vh] border border-[#b9a994] transform transition-all duration-300 overflow-y-auto"
+          @click.stop
+        >
           <button
-            :disabled="Number(selectedProduct.estoque) == 0"
-            @click.stop="addProduct"
-            class="modal-button"
-            :class="{
-              'modal-button-disabled': Number(selectedProduct.estoque) == 0,
-            }"
+            class="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#ede5dd] hover:bg-[#b9a994] transition-all duration-200 flex items-center justify-center group z-10 cursor-pointer"
+            @click="closeModal"
           >
-            {{
-              Number(selectedProduct.estoque) > 0
-                ? "Adicionar ao Carrinho"
-                : "Produto Esgotado"
-            }}
+            <i
+              class="fa-solid fa-xmark text-[#735e59] group-hover:text-white transition-colors duration-200"
+            ></i>
           </button>
+
+          <div class="flex flex-col lg:flex-row gap-6 h-full">
+            <div
+              class="flex-1 flex items-center justify-center bg-gradient-to-br from-[#ede5dd] to-[#f5f0ea] rounded-xl p-4 relative"
+            >
+              <img
+                :src="currentImageUrl"
+                alt="Produto"
+                class="w-full h-screen max-h-[80vh] object-contain rounded-lg transition-all duration-300"
+              />
+
+              <div
+                v-if="hasMultipleImages"
+                class="absolute inset-0 flex items-center justify-between p-4"
+              >
+                <button
+                  v-if="currentImageIndex > 0"
+                  @click="previousImage"
+                  class="w-12 h-12 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-pointer"
+                >
+                  <i class="fa-solid fa-chevron-left text-[#735e59] text-xl"></i>
+                </button>
+                <div v-else class="w-12"></div>
+
+                <button
+                  v-if="currentImageIndex < totalImages - 1"
+                  @click="nextImage"
+                  class="w-12 h-12 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-pointer"
+                >
+                  <i class="fa-solid fa-chevron-right text-[#735e59] text-xl"></i>
+                </button>
+                <div v-else class="w-12"></div>
+              </div>
+
+              <div
+                v-if="hasMultipleImages"
+                class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"
+              >
+                <button
+                  v-for="(image, index) in selectedProduct.imagens_url"
+                  :key="index"
+                  @click="goToImage(index)"
+                  class="w-3 h-3 rounded-full transition-all duration-200"
+                  :class="
+                    index === currentImageIndex
+                      ? 'bg-[#735e59]'
+                      : 'bg-white bg-opacity-60 hover:bg-opacity-80 cursor-pointer'
+                  "
+                ></button>
+              </div>
+
+              <div
+                v-if="hasMultipleImages"
+                class="absolute top-4 left-4 bg-black bg-opacity-50 text-white text-sm px-3 py-1 rounded-full backdrop-blur-sm"
+              >
+                {{ currentImageIndex + 1 }} / {{ totalImages }}
+              </div>
+            </div>
+
+            <div class="lg:w-80 flex flex-col justify-center space-y-6 p-4">
+              <div class="text-center lg:text-left space-y-4">
+                <h2
+                  class="text-3xl font-bold text-[#735e59] font-['Prata',serif]"
+                >
+                  {{ selectedProduct.nome }}
+                </h2>
+                <p class="text-[#735e59] text-opacity-80 leading-relaxed">
+                  {{ selectedProduct.descricao }}
+                </p>
+                <div class="pt-2">
+                  <p
+                    class="text-4xl font-bold text-[#735e59] font-['Prata',serif]"
+                  >
+                    {{ formatPrice(selectedProduct.preco ?? selectedProduct.valor) }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex justify-center lg:justify-start pt-4">
+                <button
+                  :disabled="Number(selectedProduct.estoque) == 0"
+                  @click.stop="addProduct"
+                  class="w-full lg:w-auto px-12 py-4 bg-[#735e59] text-white text-lg font-medium rounded-full hover:bg-[#5a4a46] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#735e59] disabled:hover:transform-none cursor-pointer"
+                >
+                  {{
+                    Number(selectedProduct.estoque) > 0
+                      ? "Adicionar ao Carrinho"
+                      : "Produto Esgotado"
+                  }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import { getProdutos } from "/src/api.js";
 import { cartStore } from "../store/cartStore";
 
-/**
- * Props
- */
 const props = defineProps({
   placeholder: { type: String, default: "Buscar por..." },
   minChars: { type: Number, default: 2 },
   pageLimit: { type: Number, default: 25 },
   debounceMs: { type: Number, default: 300 },
   fallbackImg: { type: String, default: "/vue.svg" },
-  /**
-   * Função a ser chamada ao clicar em "Comprar" no modal.
-   * Recebe o produto selecionado como argumento.
-   * (Mantém o nome solicitado: addProcuct)
-   */
-  // addProcuct: { type: Function, default: () => {} },
 });
 
-/**
- * Estado
- */
 const q = ref("");
 const open = ref(false);
 const results = ref([]);
@@ -133,10 +186,8 @@ let debounceId = null;
 
 const showModal = ref(false);
 const selectedProduct = ref(null);
+const currentImageIndex = ref(0);
 
-/**
- * Utils
- */
 const formatPrice = (v) => {
   const n = Number(v ?? 0);
   return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -151,16 +202,56 @@ const closePanel = () => {
 
 const openModal = (p) => {
   selectedProduct.value = p;
+  currentImageIndex.value = 0;
   showModal.value = true;
+  closePanel();
 };
 const closeModal = () => {
   showModal.value = false;
   selectedProduct.value = null;
+  currentImageIndex.value = 0;
 };
 
-/**
- * Filtrar por TÍTULO (nome) no client
- */
+const hasMultipleImages = computed(() => {
+  return (
+    selectedProduct.value?.imagens_url &&
+    selectedProduct.value.imagens_url.length > 1
+  );
+});
+
+const totalImages = computed(() => {
+  return selectedProduct.value?.imagens_url?.length || 0;
+});
+
+const currentImageUrl = computed(() => {
+  if (!selectedProduct.value) return fallbackImg;
+  if (
+    selectedProduct.value.imagens_url &&
+    selectedProduct.value.imagens_url.length > 0
+  ) {
+    return selectedProduct.value.imagens_url[currentImageIndex.value];
+  }
+  return selectedProduct.value.imagem_url || fallbackImg;
+});
+
+const nextImage = () => {
+  if (currentImageIndex.value < totalImages.value - 1) {
+    currentImageIndex.value++;
+  }
+};
+
+const previousImage = () => {
+  if (currentImageIndex.value > 0) {
+    currentImageIndex.value--;
+  }
+};
+
+const goToImage = (index) => {
+  if (index >= 0 && index < totalImages.value) {
+    currentImageIndex.value = index;
+  }
+};
+
 const filterByTitle = (batch, term) => {
   const t = (term || "").trim().toLowerCase();
   if (!t) return [];
@@ -171,9 +262,6 @@ const filterByTitle = (batch, term) => {
   );
 };
 
-/**
- * Buscar uma página do servidor (respeita cursor e q)
- */
 const fetchPage = async ({ cursor } = {}) => {
   const params = { limit: props.pageLimit };
   if (cursor) params.cursor_id = cursor;
@@ -199,9 +287,6 @@ const fetchPage = async ({ cursor } = {}) => {
   return { filtered, raw: list };
 };
 
-/**
- * Carregar primeira página
- */
 const loadFirstPage = async () => {
   results.value = [];
   nextCursorId.value = null;
@@ -218,9 +303,6 @@ const loadFirstPage = async () => {
   }
 };
 
-/**
- * Carregar mais (scroll infinito)
- */
 const loadMore = async () => {
   if (!hasMoreServer.value || loadingMore.value) return;
   loadingMore.value = true;
@@ -234,9 +316,6 @@ const loadMore = async () => {
   }
 };
 
-/**
- * Debounce da digitação
- */
 watch(
   () => q.value,
   () => {
@@ -257,9 +336,6 @@ watch(
   }
 );
 
-/**
- * IntersectionObserver para scroll infinito
- */
 const onIntersect = async (entries) => {
   const e = entries[0];
   if (!e?.isIntersecting) return;
@@ -308,9 +384,6 @@ onMounted(() => {
   });
 });
 
-/**
- * Ações
- */
 const handleSelect = (p) => {
   openModal(p);
 };
@@ -369,6 +442,7 @@ const addProduct = () => {
   background-color: #ffffff;
   box-shadow: 0 4px 20px rgba(115, 94, 89, 0.15);
   transform: translateY(-1px);
+  cursor: pointer;
 }
 
 .input:focus {
@@ -503,7 +577,6 @@ const addProduct = () => {
   height: 1px;
 }
 
-/* Scrollbar personalizada */
 .panel::-webkit-scrollbar {
   width: 6px;
 }
@@ -522,155 +595,6 @@ const addProduct = () => {
   background: #735e59;
 }
 
-/* Estilos do Modal */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(115, 94, 89, 0.6);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.modal-content {
-  background: linear-gradient(135deg, #ffffff 0%, #fdfcfa 100%);
-  border-radius: 24px;
-  box-shadow: 0 24px 80px rgba(115, 94, 89, 0.3);
-  position: relative;
-  max-width: 420px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  border: 2px solid #ede5dd;
-  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid #ede5dd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 10;
-  color: #735e59;
-  font-size: 16px;
-}
-
-.modal-close:hover {
-  background: #ede5dd;
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(115, 94, 89, 0.2);
-}
-
-.modal-image-wrapper {
-  padding: 24px 24px 0;
-}
-
-.modal-image {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 16px;
-  background: #ede5dd;
-  box-shadow: 0 8px 24px rgba(115, 94, 89, 0.15);
-}
-
-.modal-info {
-  padding: 20px 24px 24px;
-}
-
-.modal-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #232121;
-  text-align: center;
-  margin-bottom: 12px;
-  font-family: "Prata", serif;
-  line-height: 1.2;
-}
-
-.modal-description {
-  color: #735e59;
-  text-align: center;
-  margin-bottom: 16px;
-  font-size: 14px;
-  line-height: 1.5;
-  opacity: 0.8;
-}
-
-.modal-price {
-  font-size: 28px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 24px;
-  background: linear-gradient(135deg, #735e59 0%, #b9a994 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-family: "Prata", serif;
-}
-
-.modal-button {
-  width: 100%;
-  padding: 16px 24px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #ede5dd 0%, #f5f0e8 100%);
-  border: 2px solid #735e59;
-  color: #735e59;
-  font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(115, 94, 89, 0.1);
-}
-
-.modal-button:hover:not(.modal-button-disabled) {
-  background: linear-gradient(135deg, #735e59 0%, #b9a994 100%);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(115, 94, 89, 0.2);
-}
-
-.modal-button-disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: #f3f3f4;
-  border-color: #e6e6e8;
-  color: #9e9ea7;
-}
-
-/* Responsividade */
 @media (max-width: 768px) {
   .input {
     height: 52px;
@@ -705,28 +629,6 @@ const addProduct = () => {
   }
 
   .price {
-    font-size: 14px;
-  }
-
-  .modal-content {
-    max-width: 350px;
-    margin: 20px;
-  }
-
-  .modal-image {
-    height: 240px;
-  }
-
-  .modal-title {
-    font-size: 20px;
-  }
-
-  .modal-price {
-    font-size: 24px;
-  }
-
-  .modal-button {
-    padding: 14px 20px;
     font-size: 14px;
   }
 }

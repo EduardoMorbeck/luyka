@@ -4,9 +4,7 @@
   >
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
-        <!-- Logo e navegação principal -->
         <div class="flex items-center justify-between flex-1 max-w-4xl">
-          <!-- Logo -->
           <div class="flex-shrink-0">
             <a
               href="/"
@@ -23,8 +21,21 @@
             </a>
           </div>
 
-          <!-- Menu de navegação -->
           <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="/cadastrar-produtos"
+              class="nav-link group relative flex items-center py-2 px-1 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121] cursor-pointer"
+            >
+              <i
+                class="fa-solid fa-plus-circle mr-2 text-sm text-[#735e59] group-hover:text-[#232121] transition-colors duration-300"
+              ></i>
+              <span class="relative">
+                Cadastrar Produtos
+                <span
+                  class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#735e59] to-[#b9a994] transition-all duration-300 group-hover:w-full"
+                ></span>
+              </span>
+            </a>
             <a
               href="/produtos"
               class="nav-link group relative flex items-center py-2 px-1 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121]"
@@ -33,21 +44,7 @@
                 class="fa-solid fa-box mr-2 text-sm text-[#735e59] group-hover:text-[#232121] transition-colors duration-300"
               ></i>
               <span class="relative">
-                Produtos
-                <span
-                  class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#735e59] to-[#b9a994] transition-all duration-300 group-hover:w-full"
-                ></span>
-              </span>
-            </a>
-            <a
-              href="/trocas-devolucoes"
-              class="nav-link group relative flex items-center py-2 px-1 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121]"
-            >
-              <i
-                class="fa-solid fa-refresh mr-2 text-sm text-[#735e59] group-hover:text-[#232121] transition-colors duration-300"
-              ></i>
-              <span class="relative">
-                Trocas & Devoluções
+                Ver Produtos
                 <span
                   class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#735e59] to-[#b9a994] transition-all duration-300 group-hover:w-full"
                 ></span>
@@ -70,21 +67,17 @@
           </div>
         </div>
 
-        <!-- Área de busca e carrinho -->
         <div class="flex items-center space-x-4 ml-6">
-          <!-- Barra de busca -->
           <div class="w-80 hidden lg:block">
             <SearchBar />
           </div>
 
-          <!-- Carrinho -->
           <div class="relative">
             <Cart />
           </div>
 
-          <!-- Menu mobile -->
           <button
-            class="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white bg-opacity-60 hover:bg-opacity-80 transition-all duration-300 hover:shadow-md border border-[#ede5dd]"
+            class="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white bg-opacity-60 hover:bg-opacity-80 transition-all duration-300 hover:shadow-md border border-[#ede5dd] cursor-pointer"
             @click="toggleMobileMenu"
             aria-label="Menu"
           >
@@ -93,37 +86,34 @@
         </div>
       </div>
 
-      <!-- Menu mobile expandido -->
       <div
         v-if="showMobileMenu"
-        class="md:hidden bg-white bg-opacity-95 backdrop-blur-md border-t border-[#ede5dd] rounded-b-2xl shadow-xl"
+        class="md:hidden bg-white bg-opacity-95 backdrop-blur-md border-t border-[#ede5dd] rounded-2xl shadow-xl"
       >
-        <div class="px-4 py-6 space-y-4">
-          <!-- Busca mobile -->
+        <div class="px-4 py-6 space-y-4 my-4">
           <div class="lg:hidden mb-4">
             <SearchBar />
           </div>
 
-          <!-- Links de navegação mobile -->
+          <a
+            href="/cadastrar-produtos"
+            class="flex items-center px-4 py-3 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121] hover:bg-[#ede5dd] rounded-xl cursor-pointer"
+            @click="closeMobileMenu"
+          >
+            <i class="fa-solid fa-plus-circle mr-3 text-[#b9a994]"></i>
+            Cadastrar Produtos
+          </a>
           <a
             href="/produtos"
-            class="flex items-center px-4 py-3 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121] hover:bg-[#ede5dd] rounded-xl"
+            class="flex items-center px-4 py-3 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121] hover:bg-[#ede5dd] rounded-xl cursor-pointer"
             @click="closeMobileMenu"
           >
             <i class="fa-solid fa-box mr-3 text-[#b9a994]"></i>
-            Produtos
-          </a>
-          <a
-            href="/trocas-devolucoes"
-            class="flex items-center px-4 py-3 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121] hover:bg-[#ede5dd] rounded-xl"
-            @click="closeMobileMenu"
-          >
-            <i class="fa-solid fa-refresh mr-3 text-[#b9a994]"></i>
-            Trocas & Devoluções
+            Ver Produtos
           </a>
           <a
             href="/cuidados"
-            class="flex items-center px-4 py-3 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121] hover:bg-[#ede5dd] rounded-xl"
+            class="flex items-center px-4 py-3 text-[#735e59] font-medium transition-all duration-300 hover:text-[#232121] hover:bg-[#ede5dd] rounded-xl cursor-pointer"
             @click="closeMobileMenu"
           >
             <i class="fa-solid fa-heart mr-3 text-[#b9a994]"></i>
@@ -140,10 +130,8 @@ import { ref } from "vue";
 import SearchBar from "./SearchBar.vue";
 import Cart from "./Cart.vue";
 
-// Estado do menu mobile
 const showMobileMenu = ref(false);
 
-// Funções do menu mobile
 const toggleMobileMenu = () => {
   showMobileMenu.value = !showMobileMenu.value;
 };

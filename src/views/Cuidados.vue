@@ -181,5 +181,9 @@
       <p>PASSO 3 - Lave com água corrente</p>
       <p>PASSO 4 - Seque sua joia</p>
     </div>
+
+    <div class="flex flex-col gap-2">
+      <h3 class="font-bold text-2xl">3. Limpeza com Produto LIMPA PRATAS</h3>
+    </div>
   </div>
 </template>

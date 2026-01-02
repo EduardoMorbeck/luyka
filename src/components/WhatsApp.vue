@@ -70,6 +70,7 @@
   width: 150px;
   border-radius: 40px;
   transition-duration: 0.3s;
+  cursor: pointer;
 }
 
 .Btn:hover .sign {

@@ -3,22 +3,28 @@ from __future__ import annotations
 import os
 import httpx
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+from ..utils.validation import validate_cep, validate_positive_value
 
 router = APIRouter(prefix="/frete", tags=["frete"])
 
-MELHOR_ENVIO_TOKEN = os.environ["MELHOR_ENVIO_TOKEN"]
-MELHOR_ENVIO_EMAIL = os.environ["MELHOR_ENVIO_EMAIL"]
+MELHOR_ENVIO_TOKEN = os.getenv("MELHOR_ENVIO_TOKEN", "")
+MELHOR_ENVIO_EMAIL = os.getenv("MELHOR_ENVIO_EMAIL", "")
 MELHOR_ENVIO_URL = "https://www.melhorenvio.com.br/api/v2/me/shipment/calculate"
 
 
 class CalcularFreteIn(BaseModel):
     from_postal_code: str = Field(..., description="CEP de origem, só números (8 dígitos)")
     to_postal_code: str = Field(..., description="CEP de destino, só números (8 dígitos)")
-    height: float = Field(..., gt=0, description="Altura em cm")
-    width: float = Field(..., gt=0, description="Largura em cm")
-    length: float = Field(..., gt=0, description="Comprimento em cm")
-    weight: float = Field(..., gt=0, description="Peso em kg")
+    height: float = Field(..., gt=0, le=200, description="Altura em cm (máximo 200cm)")
+    width: float = Field(..., gt=0, le=200, description="Largura em cm (máximo 200cm)")
+    length: float = Field(..., gt=0, le=200, description="Comprimento em cm (máximo 200cm)")
+    weight: float = Field(..., gt=0, le=30, description="Peso em kg (máximo 30kg)")
+    
+    @field_validator("from_postal_code", "to_postal_code")
+    @classmethod
+    def validate_cep(cls, v: str) -> str:
+        return validate_cep(v)
 
 @router.post("/")
 async def calcular_frete(body: CalcularFreteIn):
@@ -46,17 +52,13 @@ async def calcular_frete(body: CalcularFreteIn):
     except httpx.HTTPError as e:
         raise HTTPException(
             status_code=502,
-            detail={"message": "Falha ao contatar o serviço de frete (network).", "reason": str(e)},
+            detail={"message": "Falha ao contatar o serviço de frete. Tente novamente mais tarde."}
         )
 
     if not (200 <= resp.status_code < 300):
-        try:
-            upstream = resp.json()
-        except Exception:
-            upstream = {"raw": resp.text}
         raise HTTPException(
-            status_code=resp.status_code,
-            detail={"message": "Erro na API do Melhor Envio.", "upstream": upstream},
+            status_code=502,
+            detail={"message": "Erro ao calcular frete. Tente novamente mais tarde."}
         )
 
     try:

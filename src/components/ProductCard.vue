@@ -4,11 +4,9 @@
       class="w-72 h-full bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer overflow-hidden flex flex-col border border-gray-100 hover:border-[#b9a994] group"
       @click="openProductModal"
     >
-      <!-- Imagem em destaque -->
       <div
         class="relative w-full h-52 bg-gradient-to-br from-[#ede5dd] to-[#f5f0ea] overflow-hidden"
       >
-        <!-- Imagem principal -->
         <img
           :src="product.imagem_url"
           alt="Produto"
@@ -19,7 +17,6 @@
           @load="$event.target.style.display = 'block'"
         />
 
-        <!-- Segunda imagem (aparece no hover) -->
         <img
           v-if="hasSecondImage"
           :src="product.imagens_url[1]"
@@ -30,7 +27,6 @@
           @load="$event.target.style.display = 'block'"
         />
 
-        <!-- Tag de estoque -->
         <span
           v-if="product.estoque > 0"
           class="absolute top-3 right-3 bg-[#735e59] text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm bg-opacity-90"
@@ -38,7 +34,6 @@
           {{ product.estoque }} em estoque
         </span>
 
-        <!-- Se quiser mostrar "Esgotado" -->
         <span
           v-else
           class="absolute top-3 right-3 bg-gray-500 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm bg-opacity-90"
@@ -47,7 +42,6 @@
         </span>
       </div>
 
-      <!-- Conteúdo -->
       <div class="flex-1 p-5 flex flex-col justify-between">
         <div class="text-center space-y-3">
           <h3
@@ -70,7 +64,7 @@
         <button
           :disabled="Number(product.estoque) == 0"
           @click.stop="addProduct"
-          class="mt-6 w-full py-3 rounded-full bg-[#ede5dd] border-2 border-[#735e59] text-[#735e59] font-medium hover:bg-[#735e59] hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#ede5dd] disabled:hover:text-[#735e59] shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+          class="mt-6 w-full py-3 rounded-full bg-[#ede5dd] border-2 border-[#735e59] text-[#735e59] font-medium hover:bg-[#735e59] hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#ede5dd] disabled:hover:text-[#735e59] shadow-sm hover:shadow-md transform hover:-translate-y-0.5 cursor-pointer"
         >
           {{
             Number(product.estoque) > 0

@@ -2,12 +2,10 @@
   <footer
     class="w-full bg-gradient-to-br from-[#735e59] to-[#b9a994] border-t border-[#ede5dd]/20"
   >
-    <!-- Seção principal do footer -->
     <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12"
       >
-        <!-- Links Rápidos -->
         <div class="space-y-4">
           <h3
             class="text-xl font-semibold text-[#ede5dd] font-['Prata',serif] mb-6 relative"
@@ -20,13 +18,27 @@
           <nav class="space-y-3">
             <a
               href="/"
-              class="group flex items-center text-[#ede5dd]/80 hover:text-[#ede5dd] transition-all duration-300 hover:translate-x-1"
+              class="group flex items-center text-[#ede5dd]/80 hover:text-[#ede5dd] transition-all duration-300 hover:translate-x-1 cursor-pointer"
             >
               <i
                 class="fa-solid fa-home mr-3 text-sm group-hover:text-[#ede5dd] transition-colors duration-300"
               ></i>
               <span class="relative">
                 Home
+                <span
+                  class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#ede5dd] transition-all duration-300 group-hover:w-full"
+                ></span>
+              </span>
+            </a>
+            <a
+              href="/cadastrar-produtos"
+              class="group flex items-center text-[#ede5dd]/80 hover:text-[#ede5dd] transition-all duration-300 hover:translate-x-1"
+            >
+              <i
+                class="fa-solid fa-plus-circle mr-3 text-sm group-hover:text-[#ede5dd] transition-colors duration-300"
+              ></i>
+              <span class="relative">
+                Cadastrar Produtos
                 <span
                   class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#ede5dd] transition-all duration-300 group-hover:w-full"
                 ></span>
@@ -40,21 +52,7 @@
                 class="fa-solid fa-box mr-3 text-sm group-hover:text-[#ede5dd] transition-colors duration-300"
               ></i>
               <span class="relative">
-                Produtos
-                <span
-                  class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#ede5dd] transition-all duration-300 group-hover:w-full"
-                ></span>
-              </span>
-            </a>
-            <a
-              href="/trocas-devolucoes"
-              class="group flex items-center text-[#ede5dd]/80 hover:text-[#ede5dd] transition-all duration-300 hover:translate-x-1"
-            >
-              <i
-                class="fa-solid fa-refresh mr-3 text-sm group-hover:text-[#ede5dd] transition-colors duration-300"
-              ></i>
-              <span class="relative">
-                Trocas & Devoluções
+                Ver Produtos
                 <span
                   class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#ede5dd] transition-all duration-300 group-hover:w-full"
                 ></span>
@@ -77,7 +75,6 @@
           </nav>
         </div>
 
-        <!-- Meios de Pagamento -->
         <div class="space-y-4">
           <h3
             class="text-xl font-semibold text-[#ede5dd] font-['Prata',serif] mb-6 relative"
@@ -89,7 +86,7 @@
           </h3>
           <div class="space-y-3">
             <div
-              class="flex items-center space-x-3 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-[#ede5dd]/20 hover:bg-white/20 transition-all duration-300"
+              class="flex items-center space-x-3 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-[#ede5dd]/20 hover:bg-white/20 transition-all duration-300 cursor-pointer"
             >
               <div
                 class="w-8 h-8 bg-[#ede5dd] rounded-md flex items-center justify-center"
@@ -101,7 +98,6 @@
           </div>
         </div>
 
-        <!-- Formas de Envio -->
         <div class="space-y-4">
           <h3
             class="text-xl font-semibold text-[#ede5dd] font-['Prata',serif] mb-6 relative"
@@ -113,7 +109,7 @@
           </h3>
           <div class="space-y-3">
             <div
-              class="flex items-center space-x-3 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-[#ede5dd]/20 hover:bg-white/20 transition-all duration-300"
+              class="flex items-center space-x-3 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-[#ede5dd]/20 hover:bg-white/20 transition-all duration-300 cursor-pointer"
             >
               <div
                 class="w-8 h-8 bg-[#ede5dd] rounded-md flex items-center justify-center"
@@ -125,7 +121,6 @@
           </div>
         </div>
 
-        <!-- Contatos -->
         <div class="space-y-4">
           <h3
             class="text-xl font-semibold text-[#ede5dd] font-['Prata',serif] mb-6 relative"
@@ -139,7 +134,7 @@
             <a
               target="_blank"
               href="https://wa.me/5554994112420?text=Ol%C3%A1,%20vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es"
-              class="group flex items-center space-x-3 p-3 bg-green-600/20 backdrop-blur-sm rounded-lg border border-green-400/30 hover:bg-green-600/30 transition-all duration-300 hover:scale-105"
+              class="group flex items-center space-x-3 p-3 bg-green-600/20 backdrop-blur-sm rounded-lg border border-green-400/30 hover:bg-green-600/30 transition-all duration-300 hover:scale-105 cursor-pointer"
             >
               <div
                 class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center group-hover:bg-green-400 transition-colors duration-300"
@@ -155,7 +150,7 @@
             <a
               target="_blank"
               href="https://www.instagram.com/luyka_pratas/"
-              class="group flex items-center space-x-3 p-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-lg border border-purple-400/30 hover:from-purple-600/30 hover:to-pink-600/30 transition-all duration-300 hover:scale-105"
+              class="group flex items-center space-x-3 p-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-lg border border-purple-400/30 hover:from-purple-600/30 hover:to-pink-600/30 transition-all duration-300 hover:scale-105 cursor-pointer"
             >
               <div
                 class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300"
@@ -174,31 +169,28 @@
       </div>
     </div>
 
-    <!-- Seção de copyright -->
     <div class="border-t border-[#ede5dd]/20 bg-black/20 backdrop-blur-sm">
       <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6">
         <div
           class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0"
         >
           <div class="text-center md:text-left">
-            <p class="text-[#ede5dd]/80 text-sm">
-              © 2025 LUYKA - CNPJ: 61.835.152/0001-07
-            </p>
+            <p class="text-[#ede5dd]/80 text-sm">© {{ currentYear }} LUYKA</p>
             <p class="text-[#ede5dd]/60 text-xs mt-1">
               Todos os direitos reservados.
             </p>
           </div>
 
-          <div class="flex items-center space-x-2 text-[#ede5dd]/60 text-sm">
+          <div class="lg:flex items-center space-x-2 text-[#ede5dd]/60 text-sm">
             <span>Desenvolvido com</span>
             <i class="fa-solid fa-heart text-red-400 animate-pulse"></i>
             <span>por</span>
             <a
               target="_blank"
-              href="https://www.instagram.com/edu_morbecks/"
-              class="text-[#ede5dd] hover:text-[#ede5dd]/80 transition-colors duration-300 font-medium"
+              href="https://www.linkedin.com/in/eduardo-dos-santos-morbeck/"
+              class="text-[#ede5dd] hover:text-[#ede5dd]/80 transition-colors duration-300 font-medium cursor-pointer"
             >
-              @edu_morbecks
+              Eduardo dos Santos Morbeck
             </a>
           </div>
         </div>
@@ -206,3 +198,9 @@
     </div>
   </footer>
 </template>
+
+<script setup>
+import { computed } from "vue";
+
+const currentYear = computed(() => new Date().getFullYear());
+</script>

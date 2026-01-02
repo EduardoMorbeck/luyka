@@ -4,12 +4,6 @@
   box-sizing: border-box;
 }
 
-/* cores
-  #735e59 dark
-  #b9a994 medium
-  #ede5dd light
-*/
-
 .bg {
   background: #ede5dd;
 }
@@ -30,6 +24,7 @@
 }
 .bg-btn:hover {
   background-color: #b9a994;
+  cursor: pointer;
 }
 h1,
 h2,
